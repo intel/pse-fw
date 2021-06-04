@@ -1,0 +1,47 @@
+# The west manifest file for upstream Zephyr.
+#
+# The per-installation west configuration file, .west/config, sets the
+# path to the project containing this file in the [manifest] section's
+# "path" variable.
+#
+# You are free to create your own manifest files and put them in any
+# repository you want, to create your own custom Zephyr installations.
+# For example, you could create a manifest file in your own out of
+# tree application directory, which would pull this zephyr repository
+# in as an ordinary project.
+#
+# You can pass your manifest repositories to west init when creating a
+# new Zephyr installation. See the west documentation for more
+# information.
+
+manifest:
+  defaults:
+    remote: upstream
+
+  remotes:
+    - name: iotg
+      url-base: ssh://git@gitlab.devtools.intel.com:29418/OWR/IoTG/general/zephyrrtos
+    - name: upstream
+      url-base: https://github.com/zephyrproject-rtos
+
+  #
+  # Please add items below based on alphabetical order
+  projects:
+    - name: hal_intel
+      revision: master
+      remote: iotg
+      path: modules/hal/intel
+    - name: zephyr
+      repo-path: zephyr
+      revision: pse_base_changes
+      remote: iotg
+      import:
+        name-whitelist:
+          - mbedtls
+          - cmsis
+    - name: zephyr-iotg
+      revision: master
+      path: zephyr-iotg
+      remote: iotg
+  self:
+    path: ehl_pse-fw
