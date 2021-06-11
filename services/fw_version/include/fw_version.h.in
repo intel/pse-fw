@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2021 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#define FWVER_MAJOR        "@FWVER_MAJOR@"
+#define FWVER_MINOR        "@FWVER_MINOR@"
+#define FWVER_PATCH        "@FWVER_PATCH@"
+#define FWVER_HW_IP        "@FWVER_HW_IP@"
+
+#define FWVER_BUILD_DATE   "@FWVER_BUILD_DATE@"
+#define FWVER_BUILD_TIME   "@FWVER_BUILD_TIME@"
+#define FWVER_HOST_NAME    "@FWVER_HOST_NAME@"
+#define FWVER_WHOAMI       "@FWVER_WHOAMI@"

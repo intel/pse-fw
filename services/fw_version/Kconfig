@@ -1,0 +1,10 @@
+# Kconfig - FW Version configuration options
+#
+# Copyright (c) 2021 Intel Corporation.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+config MISC_FW_VERSION
+	bool "print FW Version strings"
+	default y

@@ -1,5 +1,6 @@
 #! /bin/bash
 ws_dir=$(pwd)
+SERVICES=$(pwd)/services
 pse_image_tools_dir=$ws_dir/tools/pse_image_tool
 
 clean() {
@@ -28,7 +29,7 @@ else
 	app=$1
 fi
 clean
-west build -b ehl_pse_crb $app
+west build -b ehl_pse_crb $app -DZEPHYR_EXTRA_MODULES=$SERVICES
 
 if [ ! -d "build" ]; then
   echo "Build Failed"

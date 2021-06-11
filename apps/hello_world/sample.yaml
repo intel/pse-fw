@@ -1,0 +1,18 @@
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  description: Hello World sample, the simplest Zephyr
+    application
+  name: hello world
+common:
+    tags: introduction
+    harness: console
+    harness_config:
+      type: one_line
+      regex:
+        - "Hello World! (.*)"
+tests:
+  sample.helloworld:
+    tags: introduction
