@@ -130,6 +130,7 @@ void send_ext_message(const struct device *dev, uint32_t id)
 	const uint8_t data[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
 	id |= 0xFFFF0;
+
 	ret = can_write(dev, &data[0], sizeof(data), id, CAN_DATAFRAME,
 			K_FOREVER);
 	if (ret < 0) {
@@ -242,6 +243,7 @@ void configure_std_filter(const struct device *dev, uint32_t id)
 	filter.id_type = CAN_STANDARD_IDENTIFIER;
 	filter.rtr = CAN_DATAFRAME;
 	filter.id_mask = 0x1;
+
 	/* Whenever the filter matches, the callback function is called */
 	filter_id = can_attach_isr(dev, &rx_std_callback, NULL, &filter);
 	if (filter_id < 0) {
@@ -274,6 +276,7 @@ void configure_ext_filter(const struct device *dev, uint32_t id)
 	filter.id_type = CAN_EXTENDED_IDENTIFIER;
 	filter.rtr = CAN_DATAFRAME;
 	filter.id_mask = id;
+
 	filter_id = can_attach_isr(dev, &rx_ext_callback, NULL, &filter);
 	if (filter_id < 0) {
 		printk("Configuring Ext filter failed !!\n");
@@ -289,9 +292,6 @@ void main(void)
 	const struct device *can_dev[2] = { NULL, NULL };
 	int can_id = 1, i = 0;
 
-	const struct can_timing timing1 = { 4, 1, 5, 3, 20 };   /* STD mode */
-	const struct can_timing timing2 = { 4, 1, 5, 3, 10 };   /* FD mode */
-
 	printk("PSE CAN Test Application\n");
 	can_dev[0] = device_get_binding("CAN_SEDI_0");
 	can_dev[1] = device_get_binding("CAN_SEDI_1");
@@ -305,9 +305,9 @@ void main(void)
 	can_set_mode(can_dev[1], CAN_NORMAL_MODE);
 	can_set_mode(can_dev[0], CAN_NORMAL_MODE);
 
-	printk("\nCAN set timing\n");
-	can_set_timing(can_dev[0], &timing1, &timing2);
-	can_set_timing(can_dev[1], &timing1, &timing2);
+	printk("\nCAN set bit rate\n");
+	can_set_bitrate(can_dev[0], CAN_BAUDRATE_500_KBPS, CAN_BAUDRATE_500_KBPS);
+	can_set_bitrate(can_dev[1], CAN_BAUDRATE_500_KBPS, CAN_BAUDRATE_500_KBPS);
 
 	printk("\nConfigure filters for STD CAN frames\n");
 	configure_std_filter(can_dev[1], can_id);
@@ -324,9 +324,10 @@ void main(void)
 	can_set_mode(can_dev[0], CAN_FD_MODE);
 	can_set_mode(can_dev[1], CAN_FD_MODE);
 
-	printk("\nCAN set timing\n");
-	can_set_timing(can_dev[0], &timing1, &timing2);
-	can_set_timing(can_dev[1], &timing1, &timing2);
+	printk("\nCAN set bitrate\n");
+
+	can_set_bitrate(can_dev[0], CAN_BAUDRATE_1_MBPS, CAN_BAUDRATE_1_MBPS);
+	can_set_bitrate(can_dev[1], CAN_BAUDRATE_1_MBPS, CAN_BAUDRATE_1_MBPS);
 
 	printk("\nConfigure Std FD filter\n");
 	configure_std_filter(can_dev[1], can_id);
