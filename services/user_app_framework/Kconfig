@@ -1,0 +1,46 @@
+menu "General Kernel Options"
+
+config USER_APP_FRAMEWORK
+	bool "User mode App framework"
+	select STACK_CANARIES
+	select TEST_RANDOM_GENERATOR
+	help
+	  This is a wrapper around Zephyr User mode and
+	  memory domain for defining logical Apps and service.
+
+config NUM_USER_APP_AND_SERVICE
+	int "Number of user mode App"
+	default 0
+	help
+	  Set how many user mode application needed.
+
+config NUM_USER_SERVICE
+	int "Number of user mode service"
+	default 0
+	help
+	  Set how many user mode service needed.
+config OVERRIDE_APP_RES_TABLE
+	bool "Enable override default Apps resource table"
+	default n
+	help
+	  Enable override default Apps resource table
+
+config MAX_NUM_DEVICE_LIST
+	int "Max Number of device access list"
+	default 8
+	help
+	  Max Number of device access list.
+
+config MAX_DEVICE_NAME_LEN
+	int "Max length of device name"
+	default 14
+	help
+	  Max length of device name.
+
+config APP_FRAMEWORK_LOG
+	int "Enable user mode framework log"
+	default 0
+	help
+	  Enable User mode framework log.
+
+endmenu

@@ -5,5 +5,5 @@
 #rsource "ehl-oob/Kconfig"
 #rsource "eclite_fw/Kconfig"
 #rsource "tsn_network_service/Kconfig"
-#rsource "user_app_framework/Kconfig"
+rsource "user_app_framework/Kconfig"
 rsource "fw_version/Kconfig"
