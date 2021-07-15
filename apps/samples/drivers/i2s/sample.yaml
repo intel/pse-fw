@@ -1,0 +1,18 @@
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  description: PSE I2S test app.
+  name: pse i2s
+  platforms: intel_pse
+common:
+    tags: samples
+    harness: i2s
+    harness_config:
+      type: one_line
+tests:
+  singlethread:
+    extra_args: CONF_FILE=prj_single.conf
+  test:
+    tags: samples
