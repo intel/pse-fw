@@ -1,0 +1,35 @@
+# Kconfig - pse-host communication configuration options
+#
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menu "host_service"
+
+config HOST_SERVICE
+	bool "HOST_SERVICE support"
+	select IPC
+	select IPC_SEDI
+	help
+	  this option enables pse-host communication support.
+
+if HOST_SERVICE
+config SYS_MNG
+	bool "System Management Protocol support"
+	default y
+	help
+	  pse-host system management commands handling.
+
+config HECI
+	bool "HECI Protocol support"
+	default y
+	help
+	  host HECI protocol
+
+if HECI
+rsource "heci/Kconfig"
+endif
+
+endif
+endmenu
