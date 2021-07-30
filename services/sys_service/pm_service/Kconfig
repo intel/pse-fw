@@ -1,0 +1,23 @@
+# Kconfig - PM Service Options
+#
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menu "PM Service Options"
+
+config PM_SERVICE
+	bool "PM Service"
+	select SYS_POWER_MANAGEMENT
+	select DEVICE_PM
+	select RUNTIME_NMI
+	select TICKLESS_KERNEL
+	help
+		pse power management.
+
+module = PM_SERV
+module-str = pm_serv
+source "subsys/logging/Kconfig.template.log_config"
+
+endmenu

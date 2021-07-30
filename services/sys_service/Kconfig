@@ -1,9 +1,10 @@
 config SYS_SERVICE
 	bool "SYS Service"
-	depends on NUM_USER_APP_AND_SERVICE >= 4
 	help
 		Enable System service.
 
 if SYS_SERVICE
 rsource "host_service/Kconfig"
 endif
+
+rsource "pm_service/Kconfig"

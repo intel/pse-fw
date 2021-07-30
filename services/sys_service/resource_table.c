@@ -15,5 +15,5 @@ __attribute__((weak)) struct user_app_res_table_t
 	  .dev_list = { "IPC_HOST"},
 	  .dev_cnt = 1 },
 	/* Hello World sample App. */
-	{ .app_id = 3, .priority = APP_BOOT_PRIO_1 },
+	{ .app_id = 1, .priority = APP_BOOT_PRIO_1 },
 };

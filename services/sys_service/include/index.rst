@@ -8,5 +8,4 @@ Reference Capabilities
 
    ipc.rst
    heci.rst
-
-
+   pm_index.rst
