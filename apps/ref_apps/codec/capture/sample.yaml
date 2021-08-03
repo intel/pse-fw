@@ -1,0 +1,19 @@
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  description: PSE Codec test app.
+  name: pse codec
+  platforms: intel_pse
+common:
+    tags: drivers samples
+    depends_on: i2c i2s
+    harness: i2s
+    harness_config:
+      type: one_line
+tests:
+  singlethread:
+    extra_args: CONF_FILE=prj_single.conf
+  test:
+    tags: samples
