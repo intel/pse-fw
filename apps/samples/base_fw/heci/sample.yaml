@@ -1,0 +1,7 @@
+sample:
+  name: HECI sample
+  platforms: intel_pse
+tests:
+  sample.base_fw.heci:
+    tags: HECI
+    depends_on: heci
