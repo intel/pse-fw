@@ -1,0 +1,7 @@
+sample:
+  name: DMA driver sample
+  platforms: ehl_pse_crb
+tests:
+  sample.drivers.dma:
+    tags: DMA
+    depends_on: dma
