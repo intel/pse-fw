@@ -11,18 +11,12 @@
 #include <user_app_framework/user_app_config.h>
 #include "pse_sys_service.h"
 
-#if defined(CONFIG_PMC_SERVICE)
 #include "pmc_service/pmc_service_common.h"
-#endif
-#if defined(CONFIG_HOST_SERVICE)
 #include "host_service/host_service_common.h"
-#endif
 #if defined(CONFIG_WOL_SERVICE)
 #include "wol_service.h"
 #endif
-#if defined(CONFIG_PM_SERVICE)
 #include "pm_service.h"
-#endif
 
 static void sys_config(void)
 {

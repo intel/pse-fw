@@ -1,0 +1,31 @@
+
+module = PMC
+module-str = pmc
+source "subsys/logging/Kconfig.template.log_config"
+
+menu "PMC Service Options"
+
+config PMC_SERVICE
+	bool "PMC Service"
+	select SIDEBAND
+	help
+		Provide PMC IPC comunication interface.
+
+config PMC_DUMMY_RESP
+	bool "PMC Dummy response - only for debugging"
+	help
+		user can enable dummy PMC response to verify their code flow.
+
+config RUN_PMC_SERV_SUPERVISORY
+	bool "RUN PMC Service in supervisory mode"
+	default y
+	help
+		Enable PMC service to run in supervisory mode.
+
+config PMC_MAX_CLIENT
+	int "Max number of PMC Client"
+	default 2
+	help
+		Max number of PMC Client supported.
+
+endmenu

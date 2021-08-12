@@ -8,3 +8,4 @@ rsource "host_service/Kconfig"
 endif
 
 rsource "pm_service/Kconfig"
+rsource "pmc_service/Kconfig"

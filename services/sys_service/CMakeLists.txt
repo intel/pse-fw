@@ -1,6 +1,7 @@
 add_subdirectory_ifdef(CONFIG_HOST_SERVICE host_service)
 zephyr_sources_ifdef(CONFIG_SYS_SERVICE resource_table.c)
 zephyr_sources_ifdef(CONFIG_SYS_SERVICE sys_service.c)
+zephyr_sources_ifdef(CONFIG_PMC_SERVICE pmc_service/pmc_service.c)
 zephyr_sources_ifdef(CONFIG_PM_SERVICE pm_service/pm_service.c)
 
 zephyr_include_directories(include)

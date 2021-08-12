@@ -12,8 +12,8 @@ __attribute__((weak)) struct user_app_res_table_t
 	global_resource_info[CONFIG_NUM_USER_APP_AND_SERVICE] = {
 	/*PMC/System service. */
 	{ .app_id = 0, .priority = SERV_BOOT_PRIO_0,
-	  .dev_list = { "IPC_HOST"},
-	  .dev_cnt = 1 },
+	  .dev_list = { "IPC_HOST", "IPC_PMC"},
+	  .dev_cnt = 2 },
 	/* Hello World sample App. */
 	{ .app_id = 1, .priority = APP_BOOT_PRIO_1 },
 };
