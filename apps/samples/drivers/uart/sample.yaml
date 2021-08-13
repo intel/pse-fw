@@ -1,0 +1,18 @@
+# Copyright (c) 2019 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  description: PSE  UART test app.
+  name: pse uart
+  platforms: ehl_pse_crb
+common:
+    tags: samples
+    harness: console
+    harness_config:
+      type: one_line
+tests:
+  singlethread:
+    extra_args: CONF_FILE=prj_single.conf
+  test:
+    tags: samples
