@@ -1,0 +1,65 @@
+menuconfig TSN_NET_SERVICE
+	bool "Enable TSN Network Service"
+	default n
+	depends on ETH_DWC_EQOS && NET_L2_ETHERNET_MGMT
+	help
+	  Enable TSN network service to initialize MAC address,
+	  IP address configuration & TSN parameters configuration
+	  from BIOS.
+
+if TSN_NET_SERVICE
+
+module = TSN_NET_SERVICE
+module-dep = LOG
+module-str = Log level for TSN Network Service
+module-help = Sets log level for TSN Network Service.
+
+choice
+	prompt "$(module-str)"
+	default $(module)_LOG_LEVEL_DEFAULT
+	depends on $(module-dep)
+	help
+	  $(module-help)
+
+config $(module)_LOG_LEVEL_OFF
+	bool "Off"
+	help
+	  Do not write to log.
+
+config $(module)_LOG_LEVEL_ERR
+	bool "Error"
+	help
+	  Only write to log when NET_ERR or LOG_ERR is used.
+
+config $(module)_LOG_LEVEL_WRN
+	bool "Warning"
+	help
+	  Write to log with NET_WARN or LOG_WRN in addition to previous level.
+
+config $(module)_LOG_LEVEL_INF
+	bool "Info"
+	help
+	  Write to log with NET_INFO or LOG_INF in addition to previous levels.
+
+config $(module)_LOG_LEVEL_DBG
+	bool "Debug"
+	help
+	  Write to log with NET_DBG or LOG_DBG in addition to previous levels.
+
+config $(module)_LOG_LEVEL_DEFAULT
+	bool "Default"
+	help
+	  Use default log level.
+
+endchoice
+
+config $(module)_LOG_LEVEL
+	int
+	default 0 if $(module)_LOG_LEVEL_OFF || !$(module-dep)
+	default 1 if $(module)_LOG_LEVEL_ERR
+	default 2 if $(module)_LOG_LEVEL_WRN
+	default 3 if $(module)_LOG_LEVEL_INF
+	default 4 if $(module)_LOG_LEVEL_DBG
+	default LOG_DEFAULT_LEVEL if $(module)_LOG_LEVEL_DEFAULT
+
+endif # TSN_NET_SERVICE
