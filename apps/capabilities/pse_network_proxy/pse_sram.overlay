@@ -1,0 +1,14 @@
+/*
+ * Copyright (c) 2021 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	l2sram: memory@60000000{
+		device_type = "memory";
+		compatible = "mmio-sram";
+		label = "l2sram";
+		reg = <0x60000000 0xe0000>;
+	};
+};
