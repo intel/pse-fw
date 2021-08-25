@@ -1,0 +1,15 @@
+sample:
+  description: PSE BASE APP.
+  name: pse_base
+  platforms: intel_pse
+common:
+    tags: samples
+    harness: console
+    harness_config:
+      type: one_line
+tests:
+  singlethread:
+    extra_args: CONF_FILE=prj_single.conf
+  test:
+    tags: samples
+

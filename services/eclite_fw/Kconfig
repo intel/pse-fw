@@ -1,0 +1,230 @@
+# Kconfig - ECLite configuration options
+
+#
+# Copyright (c) 2015 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+module = ECLITE
+module-str = eclite
+source "subsys/logging/Kconfig.template.log_config"
+
+config ECLITE_SERVICE
+        bool "Eclite Service"
+        default y
+        help
+		Enable EC Lite service.
+
+config  ECLITE_I2C_SLAVE_NAME
+	string "I2C for all ECLITE devices"
+	default "I2C_0"
+	help
+		Build settings to run on the HFPGA
+
+config ECLITE_CHARGING_FRAMEWORK
+	bool "enable EcLite Charging Framework"
+	default y
+	help
+		Enable Eclite charging framework
+
+config  ECLITE_BATTERY_BTP_GPIO_NAME
+	string "GPIO Cotroller Name for BTP"
+	default  GPIO_SEDI_0_NAME
+	help
+		GPIO controller to be used by charging framework
+
+config  ECLITE_BATTERY_BTP_GPIO_PIN
+	int "GPIO pin for BTP"
+	default  13
+	help
+		GPIO pin to be used for BTP by charging framework
+
+config  ECLITE_CHG_GPIO_NAME
+	string "GPIO Cotroller Name for charger present"
+	default  GPIO_SEDI_0_NAME
+	help
+		GPIO controller to be used by charging framework
+
+config  ECLITE_UCSI_GPIO_NAME
+    string "GPIO controller name for UCSI present"
+    default  GPIO_SEDI_0_NAME
+    help
+        GPIO controller to be used by UCSI framework
+
+config  ECLITE_UCSI_GPIO_PIN
+    int "GPIO for UCSI"
+    default 14
+    help
+        GPIO pin to be used for UCSI
+
+config  ECLITE_UCSI_I2C_SLAVE_ADDR
+    int "I2C slave address for ucsi"
+    default 8
+    help
+        I2C slave address ucsi
+
+config  ECLITE_UCSI_FRAMEWORK
+    bool "Enable ecLite UCSI Framework"
+    default y
+    help
+        Enable eclite UCSI framework
+
+config  ECLITE_UCSI_DBG
+    bool "enables ucsi debug log"
+    default n
+    help
+        This turns on the serial logs for debug purposes
+
+config  ECLITE_UCSI_I2C_SLAVE_NAME
+    string "I2C for  eclite ucsi device"
+    default "I2C_7"
+    help
+        build settings to enable the UCSI
+
+config  ECLITE_CHG_GPIO_PIN
+	int "Gpio for Charger"
+	default 10
+	help
+		Gpio for charger present
+
+config  ECLITE_CHG_CTRL_GPIO_NAME
+	string "GPIO Cotroller Name for charger control"
+	default  GPIO_SEDI_0_NAME
+	help
+		GPIO controller to be used by charging framework
+
+config  ECLITE_CHG_CTRL_GPIO_PIN
+	int "Gpio for Charger Control"
+	default 11
+	help
+		Gpio for charger control
+
+config CHG_I2C_SLAVE_ADDR
+	int "I2C slave address for Charger SENS"
+	default 10
+	help
+		I2C slave address charger
+config THERMAL_ENABLE
+	bool "Enables thermal framework"
+	default y
+	help
+		Enables thermal sensors and drivers. All termal capabilities
+		are off when disabled
+
+config  ECLITE_THERMAL_SENSOR_GPIO_PIN
+	int "Gpio for Thermal sensor Alert"
+	default 12
+	help
+		Alert Gpio for Thermal sensor
+
+config  ECLITE_THERMAL_SENSOR_GPIO_NAME
+	string "GPIO Cotroller Name for BTP"
+	default  GPIO_SEDI_0_NAME
+	help
+		GPIO controller to be used by charging framework
+
+config  THERM_SEN_0_I2C_SLAVE_ADDR
+	int "I2C slave address for SENS 0"
+	default 72
+	help
+		I2C slave address sensor 0
+config  THERM_SEN_1_I2C_SLAVE_ADDR
+	int "I2C slave address for SENS 1"
+	default 73
+	help
+		I2C slave address sensor 1
+config  THERM_SEN_2_I2C_SLAVE_ADDR
+	int "I2C slave address for SENS 2"
+	default 74
+	help
+		I2C slave address sensor 2
+config  THERM_SEN_2_I2C_SLAVE_ADDR
+	int "I2C slave address for SENS 2"
+	default 74
+	help
+		I2C slave address sensor 2
+config  THERM_SEN_3_I2C_SLAVE_ADDR
+	int "I2C slave address for SENS 3"
+	default 75
+	help
+		I2C slave address sensor 3
+
+config THERMAL_SHUTDOWN_ENABLE
+	bool "Enable thermal shutdown"
+	default n
+	help
+		Enable thermal shutdown
+
+config  CPU_CRIT_SHUTDOWN
+	int "Critical shutdown temperature for CPU"
+	default 130
+	help
+		Critical shutdown temperature for CPU
+
+config  SYS_CRIT_SHUTDOWN
+	int "Critical shutdown temperature for platform thermistors"
+	default 110
+	help
+		Critical shutdown temperature for platform thermistors
+
+config  ECLITE_BATTERY_CRITICAL_LEVEL
+	int "Battery critical level for S3 wake"
+	default 10
+	help
+		Low battery limit in percentage for S3 wake.
+
+config  ECLITE_FAN_PWM_PIN
+	int "PWM pin for FAN"
+	default 0
+	help
+		PWM pin for FAN
+
+config  ECLITE_FAN_PWM_NAME
+	string "PWM controller for FAN"
+	default PWM_SEDI_0_NAME
+	help
+		PWM pin for FAN
+
+config  ECLITE_FAN_TGPIO_PIN
+	int "TGPIO pin for FAN"
+	default 0
+	help
+		TGPIO pin for FAN
+
+config  ECLITE_FAN_TGPIO_NAME
+	string "TGPIO controller for FAN"
+	default GPIO_TIMED_SEDI_0_NAME
+	help
+		PWM pin for FAN
+
+config ECLITE_POLLING_TIMER_PERIOD
+	int "CPU temperature polling timer interval in milliseconds"
+	default 5000
+	help
+		CPU temperature polling timer interval in milliseconds
+
+config ECLITE_THERMAL_WAKE_SOURCE_PIN
+	int "Wake up source for platform thermal sensor GPIO pin"
+	default 49
+	help
+		Wake up source for platform thermal sensor GPIO pin.
+		The GPIO pin range is 0 to 76 across all controllers.
+
+config ECLITE_DEBUG
+	bool "Enables cpu thermal sensing device"
+	default n
+	help
+		This turns on the serial logs for debug purposes
+
+config ECLITE_THERMAL_DEBUG
+	bool "Enables cpu thermal debug log"
+	default n
+	help
+		This turns on the serial logs for debug purposes
+
+config TEST_MODE
+	bool "Enables test mode to use dummy value and TGPIO mux setting"
+	default n
+	help
+		This turns on test setting
