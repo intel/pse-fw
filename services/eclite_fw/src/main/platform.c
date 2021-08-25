@@ -197,8 +197,8 @@ APP_GLOBAL_VAR(1) uint8_t thermal_disable_d0ix = 0;
 
 static void connect_peripherals(void);
 
-#if defined(CONFIG_SOC_INTEL_PSE)
-/* Add the requried kernel object pointer into list. */
+#if defined(CONFIG_SOC_ELKHART_LAKE_PSE)
+/* Add the required kernel object pointer into list. */
 
 static const void *obj_list[] = {
 	&dispatcher_task, &dispatcher_stack, &dispatcher_queue,
@@ -219,7 +219,7 @@ static void service_main(void *p1, void *p2, void *p3);
  * and service main entry will invoke even before Zephyr main function.
  * Service main should complete as quickly as possible and offload
  * all its time consuming work to a sub task to improve boot latency.
- * The fuction connect_peripherals is chosen to be the callback funtion
+ * The function connect_peripherals is chosen to be the callback function
  * for this service, and all the binding/callback configurations should
  * be performed in this function.
  * We cannot compute the amount of Kernel objects because each element
@@ -290,7 +290,7 @@ int platform_gpio_register_wakeup(int battery_state)
 static void connect_peripherals(void)
 {
 	/* This function needs the information provided by
-	 * init_dev_framwork, so this why it is placed here.
+	 * init_dev_framework, so this why it is placed here.
 	 */
 	ECLITE_LOG_DEBUG(" ");
 	int ret;
@@ -329,7 +329,7 @@ static void connect_peripherals(void)
 #ifdef CONFIG_ECLITE_CHARGING_FRAMEWORK
 	struct eclite_device *charger_dev = find_dev_by_type(DEV_CHG);
 
-	/* Look for charger device, if not found dont do intialization */
+	/* Look for charger device, if not found dont do initialization */
 	if (charger_dev) {
 		struct charger_driver_data *charger_data =
 			charger_dev->driver_data;
@@ -342,7 +342,7 @@ static void connect_peripherals(void)
 
 	struct eclite_device *battery_dev = find_dev_by_type(DEV_FG);
 
-	/* Look for battery device, if not found dont do intialization */
+	/* Look for battery device, if not found dont do initialization */
 	if (battery_dev) {
 		struct sbs_driver_data *battery_data =
 			battery_dev->driver_data;
@@ -357,7 +357,7 @@ static void connect_peripherals(void)
 #ifdef CONFIG_THERMAL_ENABLE
 	struct eclite_device *fan = find_dev_by_type(DEV_FAN);
 
-	/* Look for fan device, if not found dont do intialization */
+	/* Look for fan device, if not found dont do initialization */
 	if (fan) {
 		/* configure peripherals connected to fan.*/
 		fan->init(fan);
@@ -446,7 +446,7 @@ void eclite_d0ix(uint8_t state)
 {
 	thermal_disable_d0ix = state;
 }
-#if defined(CONFIG_SOC_INTEL_PSE)
+#if defined(CONFIG_SOC_ELKHART_LAKE_PSE)
 static void service_main(void *p1, void *p2, void *p3)
 {
 	if (!eclite_enable) {

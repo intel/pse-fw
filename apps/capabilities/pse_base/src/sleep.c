@@ -47,19 +47,12 @@ static const struct pm_state_info residency_info[] =
 static size_t residency_info_len = PM_STATE_DT_ITEMS_LEN(DT_NODELABEL(cpu0));
 
 
-/* Need to add devices in the order in which
- * it is suspended and resumed.
- */
-const char *const z_pm_core_devices[] = {
-	"DMA_0", "UART_2", "sys_clock", "SIDEBAND", "IPC_HOST", "IPC_PMC", NULL
-};
-
 /* Idle time */
 static uint32_t m_delay;
 /* Pointer to UART device handler */
 static const struct device *uart_dev;
 /* Shell state */
-bool shell_active = true;
+static bool shell_active = true;
 
 #ifdef CONFIG_ECLITE_SERVICE
 extern void eclite_d0ix(uint8_t state);
@@ -96,7 +89,7 @@ void stop_pwm(void)
 		printk("%s - Bind failed\n", PWM_1_NAME);
 		return;
 	}
-	pwm_pin_stop(pwm_1, 7);
+	pwm_pin_set_cycles(pwm_1, 7, 0xff, 0, 0);
 }
 #endif
 
@@ -116,14 +109,14 @@ static int print_dev_list(void)
 	}
 
 	/* Get status of PSE IO devices. */
-	if (device_any_busy_check() != 0) {
+	if (pm_device_is_any_busy() != 0) {
 		printk("All PSE IO devices are not idle, deferring D0ix entry "
 		       "!!!\n");
 		z_device_get_all_static(&pm_device_list);
-/* device_list_get(&pm_device_list, &count); */
+
 		printk("Following device are not idle!!\n");
 		for (i = 0; i < count; i++) {
-			if (device_busy_check(&pm_device_list[i])) {
+			if (pm_device_is_busy(&pm_device_list[i])) {
 
 				printk("%s\n", pm_device_list[i].name);
 			}

@@ -74,7 +74,7 @@ static int eclite_process_event_message(struct message_header_type
 	case ECLITE_OS_EVENT_BTP_UPDATE:
 		ECLITE_LOG_DEBUG("%s() Don't update OS BTP\n", __func__);
 		/* Stubbing out the BTP_UPDATE as BTP Value received from OS is
-		 * incorrect, need to track this issue in seperate HSD with BIOS
+		 * incorrect, need to track this issue in separate HSD with BIOS
 		 * event_data.event_type = FG_EVENT;
 		 * event_data.data = ECLITE_OS_EVENT_BTP_UPDATE;
 		 * eclite_post_dispatcher_event(&event_data);
@@ -332,8 +332,10 @@ void check_events_config_request(uint32_t event)
 #endif
 
 #ifdef CONFIG_HECI
-static void eclite_event_callback(uint32_t event)
+static void eclite_event_callback(uint32_t event, void *param)
 {
+	ARG_UNUSED(param);
+
 	struct dispatcher_queue_data heci_data;
 
 	check_events_config_request(event);

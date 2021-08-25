@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-if (CONFIG_SOC_INTEL_PSE)
+if (CONFIG_SOC_ELKHART_LAKE_PSE)
 
 FILE(GLOB_RECURSE app_sources src/*.c)
 
@@ -51,6 +51,5 @@ target_sources(app PRIVATE ${app_sources})
 target_compile_definitions(app PRIVATE CONFIG_EHL_IPHFPGA=1)
 target_compile_definitions(app PRIVATE CONFIG_FG=1 CONFIG_CHG=1)
 target_compile_definitions(app PRIVATE CONFIG_THERM=1 CONFIG_FAN=1)
-#target_compile_definitions(app PRIVATE CONFIG_THERMAL_ENABLE=1 )
 
 endif()

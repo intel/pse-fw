@@ -473,7 +473,7 @@ static enum device_err_code ccg_isr(void *ccg_device)
 
 	ECLITE_LOG_DEBUG(" ");
 
-	/* read interupt source */
+	/* read interrupt source */
 	ret = ccg_rd(dev, CCG_HPI_INTERRUPT_REG, &buf, RD_LEN1);
 	if (ret) {
 		LOG_WRN("CCG read failed");

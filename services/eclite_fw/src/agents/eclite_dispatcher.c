@@ -17,7 +17,6 @@
 LOG_MODULE_REGISTER(dispatcher, CONFIG_ECLITE_LOG_LEVEL);
 
 /*Time duration and period define are in milliseconds.*/
-#define TIMER_DURATION  50
 #define MAX_PERCENTAGE  100
 #define ECLITE_TASK_STACK_SIZE  1600
 #define ECLITE_TASK_PRIORITY    K_PRIO_PREEMPT(0)

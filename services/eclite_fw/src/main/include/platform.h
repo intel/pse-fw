@@ -23,10 +23,10 @@
  * These are board configuration macros.
  */
 
-#if defined(CONFIG_SOC_INTEL_PSE)
+#if defined(CONFIG_SOC_ELKHART_LAKE_PSE)
 #include <kernel_structs.h>
 #include <user_app_framework/user_app_framework.h>
-#endif /* CONFIG_SOC_INTEL_PSE */
+#endif /* CONFIG_SOC_ELKHART_LAKE_PSE */
 
 #define TEMP_CPU_CRIT_SHUTDOWN CONFIG_CPU_CRIT_SHUTDOWN
 #define TEMP_SYS_CRIT_SHUTDOWN CONFIG_SYS_CRIT_SHUTDOWN

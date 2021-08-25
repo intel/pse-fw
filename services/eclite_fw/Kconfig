@@ -11,26 +11,26 @@ module-str = eclite
 source "subsys/logging/Kconfig.template.log_config"
 
 config ECLITE_SERVICE
-        bool "Eclite Service"
-        default y
-        help
+	bool "Eclite Service"
+	default n
+	help
 		Enable EC Lite service.
 
 config  ECLITE_I2C_SLAVE_NAME
 	string "I2C for all ECLITE devices"
-	default "I2C_0"
+	default "I2C_2"
 	help
 		Build settings to run on the HFPGA
 
 config ECLITE_CHARGING_FRAMEWORK
 	bool "enable EcLite Charging Framework"
-	default y
+	default n
 	help
 		Enable Eclite charging framework
 
 config  ECLITE_BATTERY_BTP_GPIO_NAME
 	string "GPIO Cotroller Name for BTP"
-	default  GPIO_SEDI_0_NAME
+	default  "GPIO_0"
 	help
 		GPIO controller to be used by charging framework
 
@@ -42,45 +42,45 @@ config  ECLITE_BATTERY_BTP_GPIO_PIN
 
 config  ECLITE_CHG_GPIO_NAME
 	string "GPIO Cotroller Name for charger present"
-	default  GPIO_SEDI_0_NAME
+	default  "GPIO_0"
 	help
 		GPIO controller to be used by charging framework
 
 config  ECLITE_UCSI_GPIO_NAME
-    string "GPIO controller name for UCSI present"
-    default  GPIO_SEDI_0_NAME
-    help
-        GPIO controller to be used by UCSI framework
+	string "GPIO controller name for UCSI present"
+	default  "GPIO_1"
+	help
+		GPIO controller to be used by UCSI framework
 
 config  ECLITE_UCSI_GPIO_PIN
-    int "GPIO for UCSI"
-    default 14
-    help
-        GPIO pin to be used for UCSI
+	int "GPIO for UCSI"
+	default 14
+	help
+		GPIO pin to be used for UCSI
 
 config  ECLITE_UCSI_I2C_SLAVE_ADDR
-    int "I2C slave address for ucsi"
-    default 8
-    help
-        I2C slave address ucsi
+	int "I2C slave address for ucsi"
+	default 8
+	help
+		I2C slave address ucsi
 
 config  ECLITE_UCSI_FRAMEWORK
-    bool "Enable ecLite UCSI Framework"
-    default y
-    help
-        Enable eclite UCSI framework
+	bool "Enable ecLite UCSI Framework"
+	default n
+	help
+	Enable eclite UCSI framework
 
 config  ECLITE_UCSI_DBG
-    bool "enables ucsi debug log"
-    default n
-    help
-        This turns on the serial logs for debug purposes
+	bool "enables ucsi debug log"
+	default n
+	help
+		This turns on the serial logs for debug purposes
 
 config  ECLITE_UCSI_I2C_SLAVE_NAME
-    string "I2C for  eclite ucsi device"
-    default "I2C_7"
-    help
-        build settings to enable the UCSI
+	string "I2C for  eclite ucsi device"
+	default "I2C_7"
+	help
+	build settings to enable the UCSI
 
 config  ECLITE_CHG_GPIO_PIN
 	int "Gpio for Charger"
@@ -90,7 +90,7 @@ config  ECLITE_CHG_GPIO_PIN
 
 config  ECLITE_CHG_CTRL_GPIO_NAME
 	string "GPIO Cotroller Name for charger control"
-	default  GPIO_SEDI_0_NAME
+	default  "GPIO_1"
 	help
 		GPIO controller to be used by charging framework
 
@@ -107,7 +107,7 @@ config CHG_I2C_SLAVE_ADDR
 		I2C slave address charger
 config THERMAL_ENABLE
 	bool "Enables thermal framework"
-	default y
+	default n
 	help
 		Enables thermal sensors and drivers. All termal capabilities
 		are off when disabled
@@ -120,7 +120,7 @@ config  ECLITE_THERMAL_SENSOR_GPIO_PIN
 
 config  ECLITE_THERMAL_SENSOR_GPIO_NAME
 	string "GPIO Cotroller Name for BTP"
-	default  GPIO_SEDI_0_NAME
+	default  "GPIO_1"
 	help
 		GPIO controller to be used by charging framework
 
@@ -182,7 +182,7 @@ config  ECLITE_FAN_PWM_PIN
 
 config  ECLITE_FAN_PWM_NAME
 	string "PWM controller for FAN"
-	default PWM_SEDI_0_NAME
+	default "PWM_1"
 	help
 		PWM pin for FAN
 
@@ -194,7 +194,7 @@ config  ECLITE_FAN_TGPIO_PIN
 
 config  ECLITE_FAN_TGPIO_NAME
 	string "TGPIO controller for FAN"
-	default GPIO_TIMED_SEDI_0_NAME
+	default "TGPIO_1"
 	help
 		PWM pin for FAN
 

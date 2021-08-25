@@ -19,7 +19,7 @@
 
 LOG_MODULE_REGISTER(eclite_service, CONFIG_ECLITE_LOG_LEVEL);
 
-void eclite_service_isr(struct device *port,
+void eclite_service_isr(const struct device *port,
 			struct gpio_callback *cb, uint32_t pins)
 {
 
@@ -33,7 +33,7 @@ void eclite_service_isr(struct device *port,
 	event.event_type = GPIO_EVENT;
 	event.data = find_bit_position(pins);
 
-	eclite_gpio_pin_disable_callback(port, find_bit_position(pins));
+	eclite_gpio_pin_disable_callback((void *)port, find_bit_position(pins));
 	ret = eclite_post_dispatcher_event(&event);
 	if (ret) {
 		LOG_ERR("Error Posting an event");
