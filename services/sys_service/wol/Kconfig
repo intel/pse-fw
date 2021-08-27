@@ -1,0 +1,67 @@
+# Kconfig - WOL service options
+#
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menu "WOL Service Options"
+
+config WOL_SERVICE
+	bool "WOL Service"
+	select CONFIG_GPIO
+	select CONFIG_GPIO_SEDI
+	default n
+	help
+		Enable WOL service.
+
+config GBE0_WOL_SERVICE
+	bool "GBE0 WOL Service"
+	depends on WOL_SERVICE
+	default y
+	help
+		GBE0 WOL configure.
+
+config GBE1_WOL_SERVICE
+	bool "GBE1 WOL Service"
+	depends on WOL_SERVICE
+	default n
+	help
+		GBE1 WOL configure.
+
+config RGMII_INT_0
+	int "RGMII_INT input GPIO PIN"
+	depends on GBE0_WOL_SERVICE
+	default 4
+	help
+		Configure RGMII INT pin.
+
+config RGMII_INT_1
+	int "RGMII_INT input GPIO PIN"
+	depends on GBE1_WOL_SERVICE
+	default 5
+	help
+		Configure RGMII INT pin.
+
+config GBE0_GPIO_DEV
+	string "GPIO driver name"
+	default "GPIO_WOL"
+	help
+		Sets device name for GPIO.
+
+config GBE1_GPIO_DEV
+	string "GPIO driver name"
+	default "GPIO_WOL"
+	help
+		Sets device name for GPIO.
+
+config GPIO_INT_DIS_ON_D3_EXIT
+	bool "disable gpio interrupt on GBE D3 exit"
+	depends on WOL_SERVICE
+	default y
+	help
+	 Disable GPIO interrupt on GBE D3 exit.
+
+endmenu
+
+
