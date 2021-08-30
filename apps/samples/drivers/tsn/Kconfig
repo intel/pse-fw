@@ -1,0 +1,147 @@
+#
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Kconfig - Private config options for TSN sample app
+
+mainmenu "TSN sample application"
+
+config TSN_SAMPLE_USER_MODE
+	bool "User-space application"
+	depends on USERSPACE
+	help
+	  Turn on user-space mode for the sample application.
+
+config TSN_SAMPLE_THREAD_PRIORITY
+	int "Application thread priority"
+	default 0
+	range -1 NUM_PREEMPT_PRIORITIES
+	help
+	  Thread priority setting for application.
+
+config TSN_SAMPLE_BIND_NETIF
+	string "Bind with the network interface"
+	default ""
+	help
+	  A network driver interface name that TSN sample application
+	  would bind to.
+
+config TSN_SAMPLE_THREAD_SLEEP_INTERVAL
+	int "Application thread sleep interval"
+	default 10
+	range 0 60
+	help
+	  Application thread sleep interval in seconds.
+
+config TSN_SAMPLE_UDP_SEND_TARGET_IPV4_ADDR
+	string "Peer target IPv4 address"
+	help
+	  The peer IPv4 address for UDP send.
+
+config TSN_SAMPLE_UDP_SEND_TARGET_PORT
+	int "Peer target UDP port"
+	default 4242
+	range 1 65535
+	help
+	  UDP port number for UDP send.
+
+config TSN_SAMPLE_UDP_SEND_DATA_LEN
+	int "UDP data length"
+	default 18
+	range 18 1472
+	help
+	  UDP port number for UDP send.
+
+config TSN_SAMPLE_UDP_SEND_PACKETS_COUNT
+	int "UDP send packets number"
+	default 100
+	range 1 10000
+	help
+	  Total send packets number before application thread sleep.
+
+config TSN_SAMPLE_UDP_SEND_SOCKET_PRIORITY
+	int "UDP send packets socket priority"
+	default 4
+	range 0 7
+	help
+	  The socket priority of the UDP send packets.
+
+config TSN_SAMPLE_TXTIME_OFFSET
+	int "TXTIME offset that aligned to the second"
+	default 0
+	range 0 999999999
+	help
+	  The nanosecond unit TXTIME offset which aligning to the second.
+
+config TSN_SAMPLE_TXTIME_1ST_DELAY
+	int "1st send packet delay"
+	default 1
+	range 1 15
+	help
+	  The delay of sending the 1st packet in second unit.
+
+config TSN_SAMPLE_TXTIME_INTERVAL
+	int "TXTIME interval for inter-packets"
+	default 1000
+	range 250 128000000
+	help
+	  The TXTIME interval between each send packets in micro-second unit.
+
+
+module = TSN_SAMPLE
+module-dep = LOG
+module-str = Log level for TSN Sample Application
+module-help = Sets log level for TSN Sample Application.
+
+choice
+	prompt "$(module-str)"
+	default $(module)_LOG_LEVEL_DEFAULT
+	depends on $(module-dep)
+	help
+	  $(module-help)
+
+config $(module)_LOG_LEVEL_OFF
+	bool "Off"
+	help
+	  Do not write to log.
+
+config $(module)_LOG_LEVEL_ERR
+	bool "Error"
+	help
+	  Only write to log when NET_ERR or LOG_ERR is used.
+
+config $(module)_LOG_LEVEL_WRN
+	bool "Warning"
+	help
+	  Write to log with NET_WARN or LOG_WRN in addition to previous level.
+
+config $(module)_LOG_LEVEL_INF
+	bool "Info"
+	help
+	  Write to log with NET_INFO or LOG_INF in addition to previous levels.
+
+config $(module)_LOG_LEVEL_DBG
+	bool "Debug"
+	help
+	  Write to log with NET_DBG or LOG_DBG in addition to previous levels.
+
+config $(module)_LOG_LEVEL_DEFAULT
+	bool "Default"
+	help
+	  Use default log level.
+
+endchoice
+
+config $(module)_LOG_LEVEL
+	int
+	default 0 if $(module)_LOG_LEVEL_OFF || !$(module-dep)
+	default 1 if $(module)_LOG_LEVEL_ERR
+	default 2 if $(module)_LOG_LEVEL_WRN
+	default 3 if $(module)_LOG_LEVEL_INF
+	default 4 if $(module)_LOG_LEVEL_DBG
+	default LOG_DEFAULT_LEVEL if $(module)_LOG_LEVEL_DEFAULT
+
+
+source "Kconfig.zephyr"

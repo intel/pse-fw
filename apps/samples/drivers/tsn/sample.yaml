@@ -1,0 +1,16 @@
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  description: TSN sample application
+  name: pse tsn
+  platforms: intel_pse
+common:
+    tags: samples
+    harness: net
+    harness_config:
+      type: one_line
+tests:
+  test:
+    tags: samples
