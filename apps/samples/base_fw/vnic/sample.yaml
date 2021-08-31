@@ -1,0 +1,17 @@
+# Copyright (c) 2019 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+
+sample:
+  description: PSE VNIC test application
+  name: pse ethernet
+  platforms: intel_pse
+common:
+    tags: samples
+    harness: console
+    harness_config:
+      type: one_line
+tests:
+  test:
+    tags: samples
