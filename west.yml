@@ -23,6 +23,8 @@ manifest:
       url-base: ssh://git@gitlab.devtools.intel.com:29418/OWR/IoTG/general/zephyrrtos
     - name: upstream
       url-base: https://github.com/zephyrproject-rtos
+    - name: pse
+      url-base: ssh://git@gitlab.devtools.intel.com:29418/OWR/IoTG/ESE/pse/ehl_pse
 
   #
   # Please add items below based on alphabetical order
@@ -31,6 +33,14 @@ manifest:
       revision: master
       remote: iotg
       path: modules/hal/intel
+    - name: ose-bootloader
+      revision: master
+      remote: pse
+      path: modules/bootloader
+    - name: ose-cmsis
+      revision: master
+      remote: pse
+      path: modules/interface/cmsis
     - name: zephyr
       repo-path: zephyr
       revision: pse_base_changes
