@@ -164,16 +164,26 @@ static void handle_crit_battery_shutdown(struct eclite_opregion_t *opregion)
 
 static void handle_crit_thermal_shutdown(struct eclite_opregion_t *opregion)
 {
+	int16_t cpu_temp, skin_temp[4];
+
+	cpu_temp = (int16_t)opregion->cpu_temperature;
+	skin_temp[0] = (int16_t)opregion->systherm0_temp1;
+	skin_temp[1] = (int16_t)opregion->systherm1_temp1;
+	skin_temp[2] = (int16_t)opregion->systherm2_temp1;
+	skin_temp[3] = (int16_t)opregion->systherm3_temp1;
+
 #ifdef CONFIG_THERMAL_SHUTDOWN_ENABLE
-	if (opregion->cpu_temperature > TEMP_CPU_CRIT_SHUTDOWN) {
+	if (cpu_temp > TEMP_CPU_CRIT_SHUTDOWN) {
+		LOG_ERR("CPU [%d] is too hot, shutting down",
+			opregion->cpu_temperature);
 		power_state_change(PMC_SRT_SHUTDOWN);
 	}
 #endif
-	if ((opregion->systherm0_temp1 > TEMP_SYS_CRIT_SHUTDOWN) ||
-	    (opregion->systherm1_temp1 > TEMP_SYS_CRIT_SHUTDOWN) ||
-	    (opregion->systherm2_temp1 > TEMP_SYS_CRIT_SHUTDOWN) ||
-	    (opregion->systherm3_temp1 > TEMP_SYS_CRIT_SHUTDOWN)) {
-		printk("Platform sensor too hot, shutting down\n");
+	if ((skin_temp[0] > TEMP_SYS_CRIT_SHUTDOWN) ||
+	    (skin_temp[1] > TEMP_SYS_CRIT_SHUTDOWN) ||
+	    (skin_temp[2] > TEMP_SYS_CRIT_SHUTDOWN) ||
+	    (skin_temp[3] > TEMP_SYS_CRIT_SHUTDOWN)) {
+		LOG_ERR("Platform sensor too hot, shutting down\n");
 		power_state_change(PMC_SRT_SHUTDOWN);
 	}
 
