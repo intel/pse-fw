@@ -41,6 +41,7 @@ LOG_MODULE_REGISTER(eclite, CONFIG_ECLITE_LOG_LEVEL);
 
 /*unit is mili sec*/
 #define ECLITE_BOOT_WAIT_TIME   4000
+#define SENSOR_GPIO_INDEX 2
 
 K_THREAD_STACK_EXTERN(dispatcher_stack);
 K_TIMER_DEFINE(dispatcher_timer, timer_periodic_callback, timer_stop_callback);
@@ -234,11 +235,46 @@ DEFINE_USER_MODE_APP(1, USER_MODE_SERVICE | K_PART_GLOBAL | K_PART_SHARED,
 		     NO_KOBJS, connect_peripherals);
 #endif
 
+void display_sx_state(uint32_t reset_type)
+{
+	char sx_state[PM_RESET_TYPE_WARM_RESET][3] = {
+		"S0", "", "", "S3", "S4", "S5"
+	};
+
+	if (reset_type < PM_RESET_TYPE_WARM_RESET) {
+		printk("Sx/Reset event: %s\n", sx_state[reset_type]);
+	} else if (reset_type == PM_RESET_TYPE_WARM_RESET) {
+		printk("Sx/Reset event: WR\n");
+	} else {
+		printk("Sx/Reset event: CR\n");
+	}
+}
+
+void pm_reset_prep_cb(uint32_t prep_type, uint32_t reset_type,
+		      void *ctx)
+{
+	void *gpio_dev;
+
+	gpio_dev = platform_devices[SENSOR_GPIO_INDEX]->hw_interface->gpio_dev;
+	if (gpio_dev) {
+		eclite_gpio_pin_disable_callback(gpio_dev, THERMAL_SENSOR_GPIO);
+	}
+
+	k_timer_stop(&dispatcher_timer);
+	display_sx_state(reset_type);
+}
+
+
 void sx_callback(sedi_pm_sx_event_t event, void *ctx)
 {
 	int ret;
+	void *gpio_dev;
 	sedi_pm_reset_prep_t sx_state;
 	struct dispatcher_queue_data event_data;
+
+	struct platform_gpio_config *gpio_cfg =
+		(struct platform_gpio_config *)
+		platform_devices[SENSOR_GPIO_INDEX]->hw_interface->gpio_config;
 
 	if (cpu_thermal_enable) {
 		if (event == PM_EVENT_HOST_SX_ENTRY) {
@@ -250,6 +286,21 @@ void sx_callback(sedi_pm_sx_event_t event, void *ctx)
 			eclite_post_dispatcher_event(&event_data);
 		} 
 		else {
+			gpio_dev = platform_devices[SENSOR_GPIO_INDEX]
+					   ->hw_interface->gpio_dev;
+			if (gpio_dev) {
+
+				/* re-enable interrupt callback for device */
+				uint32_t gpio_pin_flag =
+					gpio_cfg->gpio_config.dir |
+					gpio_cfg->gpio_config.pull_down_en |
+					gpio_cfg->gpio_config.intr_type;
+
+					eclite_gpio_pin_enable_callback(
+						gpio_dev,
+						THERMAL_SENSOR_GPIO,
+						gpio_pin_flag);
+			}
 			/* Turn on the FAN */
 			eclite_opregion.pwm_dutycyle = eclite_fan_speed;
 			event_data.event_type = THERMAL_EVENT;
@@ -327,6 +378,8 @@ static void connect_peripherals(void)
 #ifdef CONFIG_TEST_MODE
 	int cnt = 0;
 #endif
+	sedi_pm_callback_config_t pm_rst;
+
 	if (sedi_get_config(SEDI_CONFIG_ECLITE_EN, NULL) != SEDI_CONFIG_SET) {
 		LOG_ERR("ECLite service: Disabled");
 		eclite_enable = false;
@@ -466,6 +519,12 @@ static void connect_peripherals(void)
 		LOG_DBG("Registering for S0ix");
 		sedi_pm_register_s0ix_notification(s0ix_callback, NULL);
 	}
+
+	pm_rst.func.rstprep_cb = pm_reset_prep_cb;
+	pm_rst.ctx = (void *) NULL;
+	pm_rst.type = CALLBACK_TYPE_RESET_PREP;
+	pm_rst.pri = CALLBACK_PRI_NORMAL;
+	sedi_pm_register_callback(&pm_rst);
 
 	sedi_pm_register_sx_notification(sx_callback, NULL);
 	platform_gpio_register_wakeup(battery_state);
