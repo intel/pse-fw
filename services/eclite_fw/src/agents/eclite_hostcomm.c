@@ -13,6 +13,7 @@
 #include "string.h"
 #include "common.h"
 #include <init.h> 
+#include <sedi.h>
 LOG_MODULE_REGISTER(hostcomm, CONFIG_ECLITE_LOG_LEVEL);
 
 #define EVENT_NOTIFY_CONFIG 333
@@ -418,6 +419,9 @@ static int init_host_communication(const struct device *arg)
 {
 	ARG_UNUSED(arg);
 
+	if (sedi_get_config(SEDI_CONFIG_ECLITE_EN, NULL) != SEDI_CONFIG_SET) {
+		return 0;
+	}
 #ifdef CONFIG_HECI
 	int ret;
 	heci_client_t heci_client = {

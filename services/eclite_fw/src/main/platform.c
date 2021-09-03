@@ -268,13 +268,8 @@ void pm_reset_prep_cb(uint32_t prep_type, uint32_t reset_type,
 void sx_callback(sedi_pm_sx_event_t event, void *ctx)
 {
 	int ret;
-	void *gpio_dev;
 	sedi_pm_reset_prep_t sx_state;
 	struct dispatcher_queue_data event_data;
-
-	struct platform_gpio_config *gpio_cfg =
-		(struct platform_gpio_config *)
-		platform_devices[SENSOR_GPIO_INDEX]->hw_interface->gpio_config;
 
 	if (cpu_thermal_enable) {
 		if (event == PM_EVENT_HOST_SX_ENTRY) {
@@ -286,20 +281,12 @@ void sx_callback(sedi_pm_sx_event_t event, void *ctx)
 			eclite_post_dispatcher_event(&event_data);
 		} 
 		else {
-			gpio_dev = platform_devices[SENSOR_GPIO_INDEX]
-					   ->hw_interface->gpio_dev;
-			if (gpio_dev) {
-
-				/* re-enable interrupt callback for device */
-				uint32_t gpio_pin_flag =
-					gpio_cfg->gpio_config.dir |
-					gpio_cfg->gpio_config.pull_down_en |
-					gpio_cfg->gpio_config.intr_type;
-
-					eclite_gpio_pin_enable_callback(
-						gpio_dev,
-						THERMAL_SENSOR_GPIO,
-						gpio_pin_flag);
+			ret = eclite_service_gpio_config((void *)platform_devices,
+							 (void *)plt_gpio_list,
+							 no_of_devices,
+							 no_plt_gpio);
+			if (ret) {
+				ECLITE_LOG_DEBUG("Failed to configure GPIOs: %d", ret);
 			}
 			/* Turn on the FAN */
 			eclite_opregion.pwm_dutycyle = eclite_fan_speed;
