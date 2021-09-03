@@ -172,6 +172,31 @@ int charging_manager_callback(uint8_t event, uint16_t *status)
 	}
 
 	charger_present = charger_data->ac_present;
+
+	if (bat_present) {
+		struct device *gpio_dev = (struct device *)
+			charger_dev->hw_interface->gpio_dev;
+		struct platform_gpio_config *cfg =
+			(struct platform_gpio_config *)
+			(charger_dev->hw_interface->gpio_config);
+		uint32_t pin_value;
+
+		pin_value = gpio_pin_get_raw(gpio_dev, CHARGER_GPIO);
+		if (pin_value) {
+			cfg->gpio_config.intr_type &= ~(GPIO_ACTIVE_HIGH);
+		} else {
+			cfg->gpio_config.intr_type |= (GPIO_ACTIVE_HIGH);
+		}
+		ret = eclite_gpio_configure(gpio_dev, CHARGER_GPIO,
+					    cfg->gpio_config.dir |
+					    cfg->gpio_config.pull_down_en |
+					    cfg->gpio_config.intr_type);
+		if (ret) {
+			LOG_ERR("GPIO: %u configure err", CHARGER_GPIO);
+				return ret;
+		}
+	}
+
 	*status |= charger_present << 0;
 	*status |= ((charger_present ^ charger_present_old) << 1);
 	charger_present_old = charger_present;

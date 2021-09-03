@@ -305,6 +305,8 @@ int platform_gpio_register_wakeup(int battery_state)
 		/* Enable wake source for BTP if battery present */
 		pin.gpio_pin = BATTERY_GPIO;
 		sedi_pm_configure_wake_source(PM_WAKE_EVENT_GPIO, pin, true);
+		pin.gpio_pin = CHARGER_GPIO;
+		sedi_pm_configure_wake_source(PM_WAKE_EVENT_GPIO, pin, true);
 	}
 
 	/* Enable wake source for Platform thermal sensors */

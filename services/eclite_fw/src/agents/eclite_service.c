@@ -72,6 +72,21 @@ int eclite_service_gpio_config(struct eclite_device *eclite_dev_list[],
 					gpio_cfg->gpio_config.pull_down_en |
 					gpio_cfg->gpio_config.intr_type;
 
+			if (gpio_pin_num == CHARGER_GPIO) {
+				uint32_t pin_value;
+
+				pin_value = gpio_pin_get_raw(
+					(struct device *)gpio_dev,
+				        gpio_pin_num);
+				if (pin_value) {
+					gpio_pin_flag &=
+						~(GPIO_ACTIVE_HIGH);
+				}
+				else {
+					gpio_pin_flag |= (GPIO_ACTIVE_HIGH);
+				}
+			}
+
 			if (gpio_pin_num == plt_gpio_list[j].gpio_no) {
 				/* Configure each device gpio pin */
 				ret = eclite_gpio_configure(gpio_dev,
