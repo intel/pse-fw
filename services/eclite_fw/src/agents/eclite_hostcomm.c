@@ -12,6 +12,7 @@
 #endif
 #include "string.h"
 #include "common.h"
+#include <init.h> 
 LOG_MODULE_REGISTER(hostcomm, CONFIG_ECLITE_LOG_LEVEL);
 
 #define EVENT_NOTIFY_CONFIG 333
@@ -413,8 +414,10 @@ int eclite_heci_event_process(uint32_t event)
 #endif
 }
 
-int init_host_communication(void)
+static int init_host_communication(const struct device *arg)
 {
+	ARG_UNUSED(arg);
+
 #ifdef CONFIG_HECI
 	int ret;
 	heci_client_t heci_client = {
@@ -450,3 +453,5 @@ int init_host_communication(void)
 	return 0;
 #endif
 }
+
+SYS_INIT(init_host_communication, POST_KERNEL, 80);

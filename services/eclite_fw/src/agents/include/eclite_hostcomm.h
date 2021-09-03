@@ -428,14 +428,6 @@ struct eclite_opreg_wr_attr_tbl {
 int eclite_heci_event_process(uint32_t event);
 
 /**
- * @brief This routine create and initializes HECI host communication interface.
- *
- * @retval 0 host initialization successful.
- * @retval error in heci registration or initialization
- */
-int init_host_communication(void);
-
-/**
  * @brief This routine sends event notification to BIOS for various ec lite
  *		events.
  *

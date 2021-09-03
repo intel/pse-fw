@@ -98,12 +98,6 @@ int dispatcher_init(void)
 #ifdef CONFIG_ECLITE_CHARGING_FRAMEWORK
 	handle_cold_plug();
 #endif
-
-	ret = init_host_communication();
-	if (ret) {
-		LOG_ERR("Host communication init failure. ret: %d", ret);
-		return ERROR;
-	}
 	ret = init_kernel_services();
 	if (ret) {
 		LOG_ERR("Tasks init failure. ret: %d", ret);
