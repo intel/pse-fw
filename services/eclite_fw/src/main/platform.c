@@ -187,6 +187,7 @@ APP_GLOBAL_VAR(1) struct platform_gpio_list plt_gpio_list[] = {
 APP_GLOBAL_VAR(1) bool cpu_thermal_enable = true;
 APP_GLOBAL_VAR(1) bool eclite_enable = true;
 APP_GLOBAL_VAR(1) int eclite_sx_state = PM_RESET_TYPE_S0;
+APP_GLOBAL_VAR(1) bool eclite_s0ix_state = false;
 APP_GLOBAL_VAR(1) uint32_t no_plt_gpio = sizeof(plt_gpio_list) /
 					 sizeof(struct platform_gpio_list);
 
@@ -237,6 +238,25 @@ void sx_callback(sedi_pm_sx_event_t event, void *ctx)
 {
 	int ret;
 	sedi_pm_reset_prep_t sx_state;
+	struct dispatcher_queue_data event_data;
+
+	if (cpu_thermal_enable) {
+		if (event == PM_EVENT_HOST_SX_ENTRY) {
+			eclite_fan_speed = eclite_opregion.pwm_dutycyle;
+			/* Turn off the FAN */
+			eclite_opregion.pwm_dutycyle = 0;
+			event_data.event_type = THERMAL_EVENT;
+			event_data.data = ECLITE_OS_EVENT_PWM_UPDATE;
+			eclite_post_dispatcher_event(&event_data);
+		} 
+		else {
+			/* Turn on the FAN */
+			eclite_opregion.pwm_dutycyle = eclite_fan_speed;
+			event_data.event_type = THERMAL_EVENT;
+			event_data.data = ECLITE_OS_EVENT_PWM_UPDATE;
+			eclite_post_dispatcher_event(&event_data);
+		}
+	}
 
 	ret = sedi_pm_get_reset_prep_info(&sx_state);
 	if (ret == SEDI_DRIVER_OK) {
@@ -248,25 +268,32 @@ void s0ix_callback(sedi_pm_s0ix_event_t event, void *ctx)
 {
 	struct dispatcher_queue_data event_data;
 
-	if (event == PM_EVENT_HOST_S0IX_ENTRY) {
-		k_timer_stop(&dispatcher_timer);
+	if (heci_connection_id == ECLITE_HECI_INVALID_CONN_ID) {
+		return;
+	}
 
-		eclite_fan_speed = eclite_opregion.pwm_dutycyle;
-		/* Turn off the FAN */
-		eclite_opregion.pwm_dutycyle = 0;
-		event_data.event_type = THERMAL_EVENT;
-		event_data.data = ECLITE_OS_EVENT_PWM_UPDATE;
-		eclite_post_dispatcher_event(&event_data);
+	if (cpu_thermal_enable) {
+		if (event == PM_EVENT_HOST_S0IX_ENTRY) {
+			eclite_s0ix_state = true;
+			k_timer_stop(&dispatcher_timer);
+			eclite_fan_speed = eclite_opregion.pwm_dutycyle;
+			/* Turn off the FAN */
+			eclite_opregion.pwm_dutycyle = 0;
+			event_data.event_type = THERMAL_EVENT;
+			event_data.data = ECLITE_OS_EVENT_PWM_UPDATE;
+			eclite_post_dispatcher_event(&event_data);
+		}
+		else {
+			/* Turn on the FAN */
+			eclite_s0ix_state = false;
+			eclite_opregion.pwm_dutycyle = eclite_fan_speed;
+			event_data.event_type = THERMAL_EVENT;
+			event_data.data = ECLITE_OS_EVENT_PWM_UPDATE;
+			eclite_post_dispatcher_event(&event_data);
 
-	} else {
-		/* Turn on the FAN */
-		eclite_opregion.pwm_dutycyle = eclite_fan_speed;
-		event_data.event_type = THERMAL_EVENT;
-		event_data.data = ECLITE_OS_EVENT_PWM_UPDATE;
-		eclite_post_dispatcher_event(&event_data);
-
-		k_timer_start(&dispatcher_timer, K_NO_WAIT,
-			      K_MSEC(CONFIG_ECLITE_POLLING_TIMER_PERIOD));
+			k_timer_start(&dispatcher_timer, K_NO_WAIT,
+				      K_MSEC(CONFIG_ECLITE_POLLING_TIMER_PERIOD));
+		}
 	}
 }
 

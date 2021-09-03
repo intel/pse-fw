@@ -451,5 +451,6 @@ int eclite_send_event(uint32_t event);
  */
 extern struct eclite_opregion_t eclite_opregion;
 extern bool cpu_thermal_enable;
+extern uint32_t heci_connection_id;
 
 #endif /*_ECLITE_HOSTCOMM_H_ */

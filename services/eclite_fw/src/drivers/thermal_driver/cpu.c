@@ -22,7 +22,11 @@ static int get_cpu_temperature(void *cpu, int16_t *data)
 	int ret;
 
 	if (eclite_sx_state != PM_RESET_TYPE_S0) {
-		LOG_ERR("get_cpu_temperature() in non-S0\n");
+		LOG_ERR("%s() in non-S0\n", __func__);
+		return ERROR;
+	}
+	if (eclite_s0ix_state) {
+		LOG_ERR("%s() in S0ix\n", __func__);
 		return ERROR;
 	}
 

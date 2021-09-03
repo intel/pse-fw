@@ -9,3 +9,4 @@
 
 extern struct eclite_device thermal_cpu;
 extern int eclite_sx_state;
+extern bool eclite_s0ix_state;

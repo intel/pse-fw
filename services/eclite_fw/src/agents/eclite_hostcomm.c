@@ -18,7 +18,7 @@ LOG_MODULE_REGISTER(hostcomm, CONFIG_ECLITE_LOG_LEVEL);
 
 #ifdef CONFIG_HECI
 APP_GLOBAL_VAR(1) static heci_rx_msg_t eclite_rx_msg;
-APP_GLOBAL_VAR(1) static uint32_t heci_connection_id =
+APP_GLOBAL_VAR(1) uint32_t heci_connection_id =
 	ECLITE_HECI_INVALID_CONN_ID;
 APP_GLOBAL_VAR_BSS(1) static struct message_buffer eclite_rx_buffer;
 APP_GLOBAL_VAR(1) k_tid_t thread_using_heci[] = { &dispatcher_task };
@@ -352,7 +352,6 @@ int eclite_heci_event_process(uint32_t event)
 {
 #ifdef CONFIG_HECI
 	int ret = ERROR;
-	struct dispatcher_queue_data event_data;
 
 	switch (event) {
 	case HECI_EVENT_NEW_MSG:
@@ -396,12 +395,6 @@ int eclite_heci_event_process(uint32_t event)
 				k_timer_stop(&dispatcher_timer);
 				k_msgq_purge(&dispatcher_queue);
 			}
-
-			/* Turn off the FAN */
-			eclite_opregion.pwm_dutycyle = 0;
-			event_data.event_type = THERMAL_EVENT;
-			event_data.data = ECLITE_OS_EVENT_PWM_UPDATE;
-			eclite_post_dispatcher_event(&event_data);
 
 			ret = SUCCESS;
 		} else {
