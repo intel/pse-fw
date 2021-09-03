@@ -8,3 +8,4 @@
 #include "eclite_device.h"
 
 extern struct eclite_device thermal_cpu;
+extern int eclite_sx_state;

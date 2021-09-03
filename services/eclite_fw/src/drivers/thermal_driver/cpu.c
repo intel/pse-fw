@@ -8,6 +8,8 @@
 #include "eclite_hw_interface.h"
 #include "thermal_framework.h"
 #include "platform.h"
+#include "cpu.h"
+#include <sedi.h>
 
 LOG_MODULE_REGISTER(cpu, CONFIG_ECLITE_LOG_LEVEL);
 
@@ -18,6 +20,11 @@ struct cpu_interface {
 static int get_cpu_temperature(void *cpu, int16_t *data)
 {
 	int ret;
+
+	if (eclite_sx_state != PM_RESET_TYPE_S0) {
+		LOG_ERR("get_cpu_temperature() in non-S0\n");
+		return ERROR;
+	}
 
 	ret = pmc_command(GET_TEMP, (uint8_t *)data);
 
