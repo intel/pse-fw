@@ -127,7 +127,7 @@ static int eclite_process_event_message(struct message_header_type
 				 message_header->event);
 		break;
 	default:
-		LOG_ERR("Invalid request received");
+		LOG_WRN("Invalid request received");
 		return ERROR;
 	}
 	return 0;
