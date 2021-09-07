@@ -7,9 +7,10 @@ menu "PMC Service Options"
 
 config PMC_SERVICE
 	bool "PMC Service"
+	select SYS_SERVICE
 	select SIDEBAND
 	help
-		Provide PMC IPC comunication interface.
+		Provide PMC IPC communication interface.
 
 config PMC_DUMMY_RESP
 	bool "PMC Dummy response - only for debugging"

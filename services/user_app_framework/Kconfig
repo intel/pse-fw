@@ -4,6 +4,7 @@ config USER_APP_FRAMEWORK
 	bool "User mode App framework"
 	select STACK_CANARIES
 	select TEST_RANDOM_GENERATOR
+	select CONFIG_USERSPACE
 	help
 	  This is a wrapper around Zephyr User mode and
 	  memory domain for defining logical Apps and service.
