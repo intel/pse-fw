@@ -108,6 +108,12 @@ int eclite_service_gpio_config(struct eclite_device *eclite_dev_list[],
 					return ret;
 				}
 
+				ret = eclite_gpio_pin_enable_callback(gpio_dev,
+						gpio_pin_num, gpio_pin_flag);
+				if (ret) {
+					LOG_ERR("Enabling callback failed");
+					return ret;
+				}
 			}
 		}
 	}
