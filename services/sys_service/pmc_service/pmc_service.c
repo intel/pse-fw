@@ -294,7 +294,7 @@ void pmc_config(void)
 		for (int j = 0; j < res_table->dev_cnt; j++) {
 			LOG_DBG("App:%d, sys_service:%x, dev_list[%d/%d]:%s\n",
 				res_table->app_id, res_table->sys_service, j,
-				res_table->dev_cnt, res_table->dev_list[j]);
+				res_table->dev_cnt, log_strdup(res_table->dev_list[j]));
 		}
 		if (res_table->sys_service & PMC_SERVICE) {
 			app_handle[i] = res_table->app_handle;

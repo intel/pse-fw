@@ -162,8 +162,8 @@ static void grant_driver_access(void)
 					global_resource_info[app_id]
 					.dev_list[dev_cnt]);
 			LOG_DBG("Device:%s, handle:%p\n",
-					global_resource_info[app_id]
-					.dev_list[dev_cnt],
+					log_strdup(global_resource_info[app_id]
+					.dev_list[dev_cnt]),
 					dev_handle);
 			if (dev_handle) {
 				k_object_access_grant(dev_handle,
@@ -171,8 +171,8 @@ static void grant_driver_access(void)
 					.app_handle);
 			} else {
 				LOG_ERR("error device bind req for: %s\n",
-					global_resource_info[app_id]
-						.dev_list[dev_cnt]);
+					log_strdup(global_resource_info[app_id]
+						.dev_list[dev_cnt]));
 			}
 		}
 	}

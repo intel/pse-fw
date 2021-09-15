@@ -89,7 +89,7 @@ static int ping_ipv4(char *host)
 		LOG_ERR("net_icmpv4_send_echo_request failed");
 		remove_ipv4_ping_handler();
 	} else {
-		LOG_INF("Sent a ping to %s", host);
+		LOG_INF("Sent a ping to %s", log_strdup(host));
 	}
 
 	return ret;
