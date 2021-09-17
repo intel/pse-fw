@@ -69,8 +69,7 @@ int eclite_service_gpio_config(struct eclite_device *eclite_dev_list[],
 			}
 			gpio_pin_num = gpio_cfg->gpio_no;
 			gpio_pin_flag = gpio_cfg->gpio_config.dir |
-					gpio_cfg->gpio_config.pull_down_en |
-					gpio_cfg->gpio_config.intr_type;
+					gpio_cfg->gpio_config.pull_down_en;
 
 			if (gpio_pin_num == CHARGER_GPIO) {
 				uint32_t pin_value;
@@ -107,6 +106,8 @@ int eclite_service_gpio_config(struct eclite_device *eclite_dev_list[],
 					LOG_ERR("Register callback failed");
 					return ret;
 				}
+
+				gpio_pin_flag |= gpio_cfg->gpio_config.intr_type;
 
 				ret = eclite_gpio_pin_enable_callback(gpio_dev,
 						gpio_pin_num, gpio_pin_flag);

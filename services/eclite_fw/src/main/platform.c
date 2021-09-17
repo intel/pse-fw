@@ -98,7 +98,7 @@ static APP_GLOBAL_VAR(1) struct  platform_gpio_config battery_gpio_config = {
 		.pin_bit_mask = 1ULL << BATTERY_GPIO,
 		.dir = GPIO_INPUT,
 		.pull_down_en = 0UL,
-		.intr_type = GPIO_INT_EDGE_RISING | GPIO_INT_DEBOUNCE,
+		.intr_type = GPIO_INT_EDGE_RISING,
 	},
 };
 
@@ -108,7 +108,7 @@ static APP_GLOBAL_VAR(1) struct  platform_gpio_config charger_gpio_config = {
 		.pin_bit_mask = 1ULL << CHARGER_GPIO,
 		.dir = GPIO_INPUT,
 		.pull_down_en = 0UL,
-		.intr_type = GPIO_INT_EDGE_BOTH | GPIO_INT_DEBOUNCE,
+		.intr_type = GPIO_INT_EDGE_BOTH,
 	},
 };
 
@@ -122,7 +122,7 @@ static APP_GLOBAL_VAR(1) struct  platform_gpio_config thermal_1_gpio_config = {
 		.pin_bit_mask = 1ULL << THERMAL_SENSOR_0_GPIO,
 		.dir = GPIO_INPUT,
 		.pull_down_en = 0UL,
-		.intr_type = GPIO_INT_EDGE_FALLING | GPIO_INT_DEBOUNCE,
+		.intr_type = GPIO_INT_EDGE_FALLING,
 	},
 };
 
@@ -132,7 +132,7 @@ static APP_GLOBAL_VAR(1) struct  platform_gpio_config thermal_2_gpio_config = {
 		.pin_bit_mask = 1ULL << THERMAL_SENSOR_1_GPIO,
 		.dir = GPIO_INPUT,
 		.pull_down_en = 0UL,
-		.intr_type = GPIO_INT_EDGE_FALLING | GPIO_INT_DEBOUNCE,
+		.intr_type = GPIO_INT_EDGE_FALLING,
 	},
 };
 
@@ -142,7 +142,7 @@ static APP_GLOBAL_VAR(1) struct  platform_gpio_config thermal_3_gpio_config = {
 		.pin_bit_mask = 1ULL << THERMAL_SENSOR_2_GPIO,
 		.dir = GPIO_INPUT,
 		.pull_down_en = 0UL,
-		.intr_type = GPIO_INT_EDGE_FALLING | GPIO_INT_DEBOUNCE,
+		.intr_type = GPIO_INT_EDGE_FALLING,
 	},
 };
 
@@ -152,7 +152,7 @@ static APP_GLOBAL_VAR(1) struct  platform_gpio_config thermal_4_gpio_config = {
 		.pin_bit_mask = 1ULL << THERMAL_SENSOR_3_GPIO,
 		.dir = GPIO_INPUT,
 		.pull_down_en = 0UL,
-		.intr_type = GPIO_INT_EDGE_FALLING | GPIO_INT_DEBOUNCE,
+		.intr_type = GPIO_INT_EDGE_FALLING,
 	},
 };
 
@@ -165,7 +165,7 @@ static APP_GLOBAL_VAR(1) struct  platform_gpio_config ucsi_gpio_config = {
 		.pin_bit_mask = 1ULL << UCSI_GPIO,
 		.dir = GPIO_INPUT,
 		.pull_down_en = 0UL,
-		.intr_type = GPIO_INT_EDGE_FALLING | GPIO_INT_DEBOUNCE,
+		.intr_type = GPIO_INT_EDGE_FALLING,
 	},
 };
 #endif
