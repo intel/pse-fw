@@ -84,3 +84,4 @@ void pm_power_state_exit_post_ops(struct pm_state_info info)
 	/* clear PRIMASK */
 	__enable_irq();
 }
+

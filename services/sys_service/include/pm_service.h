@@ -9,6 +9,7 @@
 #include <pm/pm.h>
 #include <sedi.h>
 #include <logging/log_core.h>
+#include <syscall.h>
 #ifndef _PMA_SERVICE_H_
 #define _PMA_SERVICE_H_
 
@@ -97,6 +98,10 @@ static inline int power_soc_deep_sleep(void)
 {
 	return sedi_pm_set_power_state(PSE_D0i3);
 }
+
+__syscall int power_trigger_pme(uint32_t pci_func);
+
+#include <syscalls/pm_service.h>
 
 /**
  * @}

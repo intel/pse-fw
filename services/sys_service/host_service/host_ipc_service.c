@@ -25,6 +25,10 @@ K_SEM_DEFINE(sem_ipc_read, 0, 1)
 K_THREAD_STACK_DEFINE(host_service_stack, SERVICE_STACK_SIZE);
 static ipc_msg_handler_f protocol_cb[MAX_SERVICE_CLIENTS] = { 0 };
 
+extern __kernel struct k_mutex dev_lock;
+extern __kernel struct k_sem sem_rtd3;
+extern __kernel struct k_sem sem_d3;
+
 int host_protocol_register(uint8_t protocol_id, ipc_msg_handler_f handler)
 {
 	if ((handler == NULL) || (protocol_id >= MAX_SERVICE_CLIENTS)) {
@@ -41,9 +45,22 @@ int host_protocol_register(uint8_t protocol_id, ipc_msg_handler_f handler)
 	return 0;
 }
 
+#define MNG_D0_NOTIFY            9
+
 static int ipc_rx_handler(const struct device *dev, void *arg)
 {
+	uint32_t inbound_drbl;
+	int cmd;
+	uint8_t protocol;
+
+	ipc_read_drbl(dev, &inbound_drbl);
+	cmd = IPC_HEADER_GET_MNG_CMD(inbound_drbl);
+	protocol =  IPC_HEADER_GET_PROTOCOL(inbound_drbl);
+
 	k_sem_give(&sem_ipc_read);
+	if ((protocol == IPC_PROTOCOL_MNG) && (cmd == MNG_D0_NOTIFY)) {
+		k_sem_give(&sem_rtd3);
+	}
 	return 0;
 }
 
@@ -85,7 +102,6 @@ static void ipc_rx_task(void *p1, void *p2, void *p3)
 	}
 }
 
-extern __kernel struct k_mutex dev_lock;
 void host_config(void)
 {
 	LOG_DBG("%s", __func__);
@@ -105,7 +121,10 @@ void host_config(void)
 		LOG_DBG("app_handle%d:%p", i, res_table->app_handle);
 		if (res_table->sys_service & HOST_SERVICE) {
 			LOG_DBG("grand HOST access to App:%d", i);
-			k_thread_access_grant(res_table->app_handle, &dev_lock);
+			k_thread_access_grant(res_table->app_handle,
+					      &dev_lock,
+					      &sem_rtd3,
+					      &sem_d3);
 		}
 	}
 }

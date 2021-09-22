@@ -10,6 +10,8 @@
 #include "sedi.h"
 #include "string.h"
 #include "host_ipc_service.h"
+#include <user_app_framework/user_app_framework.h>
+
 
 #include <logging/log.h>
 LOG_MODULE_DECLARE(heci, CONFIG_HECI_LOG_LEVEL);
@@ -259,6 +261,15 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 	req.host_addr = conn->host_addr;
 	req.fw_addr = conn->fw_addr;
 
+#ifdef CONFIG_SYS_MNG
+	ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
+	if (ret) {
+		LOG_ERR("%s failed to request access to host %d",
+			__func__, (uint32_t)ret);
+		return false;
+	}
+#endif
+
 	while (msg != NULL) {
 		/* allocate enough buffer for DMA*/
 		block_size = msg->len;
@@ -290,9 +301,15 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 		}
 		msg = msg->next;
 	}
+#ifdef CONFIG_SYS_MNG
+	mng_host_access_dereq();
+#endif
 	return true;
 
 err_sending:
 	heci_dma_free_tx_buffer(dram_addr, block_size);
+#ifdef CONFIG_SYS_MNG
+	mng_host_access_dereq();
+#endif
 	return false;
 }

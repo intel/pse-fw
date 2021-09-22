@@ -4,5 +4,5 @@ zephyr_sources_ifdef(CONFIG_SYS_SERVICE sys_service.c)
 zephyr_sources_ifdef(CONFIG_PMC_SERVICE pmc_service/pmc_service.c)
 zephyr_sources_ifdef(CONFIG_PM_SERVICE pm_service/pm_service.c)
 zephyr_sources_ifdef(CONFIG_WOL_SERVICE wol/wol_service.c)
-
+zephyr_sources_ifdef(CONFIG_SYS_SERVICE pm_syscall_handler.c)
 zephyr_include_directories(include)

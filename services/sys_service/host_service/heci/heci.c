@@ -20,8 +20,8 @@
 #ifndef min
 #define min(a, b)		  \
 	({ __typeof__(a)_a = (a); \
-	   __typeof__(b)_b = (b); \
-	   _a < _b ? _a : _b; })
+	__typeof__(b)_b = (b); \
+	_a < _b ? _a : _b; })
 #endif
 
 #include <logging/log.h>
@@ -56,6 +56,15 @@ bool heci_send_proto_msg(uint8_t host_addr, uint8_t fw_addr,
 	uint8_t buf[HECI_IPC_PACKET_SIZE] = { 0 };
 	const struct device *dev = device_get_binding("IPC_HOST");
 
+#ifdef CONFIG_SYS_MNG
+	ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
+	if (ret) {
+		LOG_ERR("%s failed to request access to host %d", __func__,
+			(uint32_t)ret);
+		return false;
+	}
+#endif
+
 	heci_bus_msg_t *msg = (heci_bus_msg_t *)buf;
 
 	msg->hdr.host_addr = host_addr;
@@ -67,6 +76,11 @@ bool heci_send_proto_msg(uint8_t host_addr, uint8_t fw_addr,
 
 	outbound_drbl = IPC_BUILD_DRBL(len, IPC_PROTOCOL_HECI);
 	ret = ipc_write_msg(dev, outbound_drbl, buf, len, NULL, NULL, 0);
+
+#ifdef CONFIG_SYS_MNG
+	mng_host_access_dereq();
+#endif
+
 	DUMP_HECI_MSG(outbound_drbl, msg, false, false);
 	if (ret) {
 		LOG_ERR("write HECI protocol message err");
@@ -94,6 +108,15 @@ static bool send_client_msg_ipc(heci_conn_t *conn, mrd_t *msg)
 	uint32_t out_drbl;
 	const struct device *dev = device_get_binding("IPC_HOST");
 	uint32_t copy_size;
+
+#ifdef CONFIG_SYS_MNG
+	ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
+	if (ret) {
+		LOG_ERR("%s failed to request access to host %d", __func__,
+			(uint32_t)ret);
+		return false;
+	}
+#endif
 
 	/* Initialize heci bus message header */
 	bus_msg->hdr.host_addr = conn->host_addr;
@@ -133,12 +156,21 @@ static bool send_client_msg_ipc(heci_conn_t *conn, mrd_t *msg)
 		out_drbl = IPC_BUILD_DRBL(fragment_size, IPC_PROTOCOL_HECI);
 		DUMP_HECI_MSG(out_drbl, bus_msg, false, false);
 		ret = ipc_write_msg(dev, out_drbl, buf,
-						 fragment_size, NULL, NULL,0);
+				    fragment_size, NULL, NULL, 0);
 		if (ret) {
+#ifdef CONFIG_SYS_MNG
+			mng_host_access_dereq();
+#endif
+
 			LOG_ERR("write HECI client msg err");
 			return false;
 		}
 	}
+
+#ifdef CONFIG_SYS_MNG
+	mng_host_access_dereq();
+#endif
+
 	return true;
 }
 
@@ -153,7 +185,8 @@ static bool heci_wait_for_flow_control(heci_conn_t *conn)
 
 	while (true) {
 		sem_ret = k_sem_take(conn->flow_ctrl_sem,
-				K_MSEC(CONFIG_HECI_FLOW_CONTROL_WAIT_TIMEOUT));
+				     K_MSEC(
+					     CONFIG_HECI_FLOW_CONTROL_WAIT_TIMEOUT));
 		k_mutex_lock(&dev_lock, K_FOREVER);
 		if (sem_ret) {
 			LOG_WRN("heci send timed out");
@@ -1161,6 +1194,7 @@ int ipc_heci_handler(const struct device *dev, uint32_t drbl)
 static void sx_heci_handler(sedi_pm_sx_event_t event, void *ctx)
 {
 	if (event == PM_EVENT_HOST_SX_ENTRY) {
+		mng_sx_entry();
 		sedi_fwst_set(ILUP_HOST, 0);
 		heci_reset();
 	}
