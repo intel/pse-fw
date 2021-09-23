@@ -1,0 +1,152 @@
+config OOB_SERVICE
+	bool "Enable Out-of-Band"
+	default n
+	depends on PMC_SERVICE
+	help
+		Enable Out-of-Band
+
+config OOB_LOGGING
+	int "Sets Logging mode for OOB"
+	depends on OOB_SERVICE
+	default 0 if OOB_SERVICE
+	help
+	Sets log level for modules which don't specify it explicitly. When
+	set to 0 it means log will not be activated for those modules.
+	Levels are:
+		- 0 OFF, do not write by default
+		- 1 ERROR, default to only write LOG_LEVEL_ERR
+		- 2 WARNING, default to write LOG_LEVEL_WRN
+		- 3 INFO, default to write LOG_LEVEL_INFO
+		- 4 DEBUG, default to write LOG_LEVEL_DBG
+
+config SOC_INTEL_PSE
+	bool "Platform is Intel PSE"
+	default y if OOB_SERVICE
+
+config OOB_BIOS_IPC
+	bool "OOB should use OOB_BIOS_IPC Default"
+	depends on OOB_SERVICE
+	default y if OOB_SERVICE
+	help
+	Set it to 'y' for default Builds. OOB should Access credentials
+	from BIOS.
+	depends on OOB_SERVICE
+	default n if OOB_SERVICE
+
+config OOB_BIOS_IPC_TIMEOUT
+	int "Sets timeout(millisecs) for BIOS IPC startup"
+	depends on OOB_SERVICE
+	default 60000
+	help
+	Sets timeout(millisecs) for BIOS IPC startup
+
+config OOB_TLS_DURATION
+	int "Sets TLS Session timer expiry duration in HOURS"
+	depends on OOB_SERVICE
+	default 24
+	help
+	Sets TLS Session timer expiry duration in HOURS
+
+config OOB_PM_SX_TRANSITION_TIME
+	int "Sets timer to track Sx transitions in SECONDS"
+	depends on OOB_SERVICE
+	default 120
+	help
+	Sets timer to track Sx transitions in SECONDS
+
+config OOB_TELIT_CLD_HOST
+	string "Sets Telit cloud host name"
+	default "api-us.devicewise.com" if !OOB_BIOS_IPC
+	help
+	Sets Telit cloud host name
+
+config OOB_TELIT_TOKEN_ID
+	string "Sets device token id"
+	default "token_id" if !OOB_BIOS_IPC
+	help
+	Sets device token id
+
+config OOB_TELIT_USERNAME
+	string "Sets device username"
+	default "device_id" if !OOB_BIOS_IPC
+	help
+	Sets device username
+
+config OOB_THINGSBOARD_CLD_HOST
+	string "Sets Thingsboard cloud host name"
+	default "192.168.1.1" if !OOB_BIOS_IPC
+	help
+	Sets Thingsboard cloud host name
+
+config OOB_THINGSBOARD_TOKEN_ID
+	string "Sets device token id"
+	default "" if !OOB_BIOS_IPC
+	help
+	Sets device token id
+
+config OOB_THINGSBOARD_USERNAME
+	string "Sets device username"
+	default "access_token" if !OOB_BIOS_IPC
+	help
+	Sets device username
+
+config OOB_AZURE_IOT_CLD_HOST
+	string "Sets Azure IoT cloud host name"
+	default "azure_iot.portal.com" if !OOB_BIOS_IPC
+	help
+	Sets Azure IoT cloud host name
+
+config OOB_AZURE_IOT_TOKEN_ID
+	string "Sets device token id"
+	default "token_id" if !OOB_BIOS_IPC
+	help
+	Sets device token id
+
+config OOB_AZURE_IOT_USERNAME
+	string "Sets device username"
+	default "device_id" if !OOB_BIOS_IPC
+	help
+	Sets device username
+
+config OOB_CLD_MQTT_CLIENT_ID
+	string "Sets Cloud Mqtt Client ID"
+	default "client_id" if !OOB_BIOS_IPC
+	help
+	Sets Cloud Mqtt Client ID
+
+config OOB_CLD_PORT_SECURE
+	string "Sets Secure Cloud host port"
+	default "8883" if !OOB_BIOS_IPC
+	help
+	Sets Secure Cloud host port
+
+config OOB_PROXY_URL
+	string "Sets Company Proxy"
+	default "http://proxy-company.com" if !OOB_BIOS_IPC
+	help
+	Sets Company Proxy
+
+config OOB_PROXY_PORT
+	string "Sets Company Proxy port"
+	default "911" if !OOB_BIOS_IPC
+	help
+	Sets Company Proxy port
+
+if BOARD_SAM_E70_XPLAINED
+config OOB_LOGGING
+	int "Sets Logging mode for OOB"
+	default 4
+	help
+	Sets log level for modules which don't specify it explicitly. When
+	set to 0 it means log will not be activated for those modules.
+	Levels are:
+		- 0 OFF, do not write by default
+		- 1 ERROR, default to only write LOG_LEVEL_ERR
+		- 2 WARNING, default to write LOG_LEVEL_WRN
+		- 3 INFO, default to write LOG_LEVEL_INFO
+		- 4 DEBUG, default to write LOG_LEVEL_DBG
+
+config OOB_BIOS_IPC
+	bool "OOB_BIOS_IPC should not be used"
+	default n
+endif

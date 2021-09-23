@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.13.1)
+if(CONFIG_BOARD_SAM_E70_XPLAINED)
+	include($ENV{ZEPHYR_BASE}/cmake/app/boilerplate.cmake NO_POLICY_SCOPE)
+	project(ehl_oob)
+	target_sources(app PRIVATE)
+elseif(CONFIG_SOC_INTEL_PSE)
+	zephyr_sources_ifdef(CONFIG_OOB_BIOS_IPC pse_oob_sec_internal.c pse_oob_sec.c pse_oob_sec_heci_client.c)
+endif()

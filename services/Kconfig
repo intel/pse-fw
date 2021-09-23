@@ -2,7 +2,7 @@
 #Uncomment below placeholder when the respective services is enabled.
 
 rsource "sys_service/Kconfig"
-#rsource "ehl-oob/Kconfig"
+rsource "ehl-oob/Kconfig"
 rsource "eclite_fw/Kconfig"
 rsource "tsn_network_service/Kconfig"
 rsource "user_app_framework/Kconfig"
