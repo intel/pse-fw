@@ -188,11 +188,18 @@ int charging_manager_callback(uint8_t event, uint16_t *status)
 			cfg->gpio_config.intr_type |= (GPIO_ACTIVE_HIGH);
 		}
 		ret = eclite_gpio_configure(gpio_dev, CHARGER_GPIO,
+					    cfg->gpio_config.dir);
+		if (ret) {
+			LOG_ERR("GPIO: %u configure err", CHARGER_GPIO);
+				return ret;
+		}
+
+		ret = gpio_pin_interrupt_configure(gpio_dev, CHARGER_GPIO,
 					    cfg->gpio_config.dir |
 					    cfg->gpio_config.pull_down_en |
 					    cfg->gpio_config.intr_type);
 		if (ret) {
-			LOG_ERR("GPIO: %u configure err", CHARGER_GPIO);
+			LOG_ERR("GPIO: %u intr configure err", CHARGER_GPIO);
 				return ret;
 		}
 	}
