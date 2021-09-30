@@ -1,0 +1,19 @@
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  description: PSE test app for pwm and counter
+  name: pwm
+  platforms: ehl_pse_crb
+common:
+    tags: samples
+    harness: console
+    harness_config:
+      type: one_line
+      regex:
+tests:
+  singlethread:
+    extra_args: CONF_FILE=prj_single.conf
+  test:
+    tags: samples
