@@ -354,6 +354,17 @@ int platform_gpio_register_wakeup(int battery_state)
 	return 0;
 }
 
+int is_eclite_devices_available(void)
+{
+	return (!eclite_get_i2c_device(ECLITE_I2C_DEV)		||
+		!eclite_get_i2c_device(ECLITE_UCSI_I2C_DEV)	||
+		!eclite_get_pwm_device(ECLITE_PWM_DEV)		||
+		!eclite_get_gpio_device(CHARGER_GPIO_NAME)	||
+		!eclite_get_gpio_device(BATTERY_GPIO_NAME)	||
+		!eclite_get_gpio_device(THERMAL_SENSOR_GPIO_NAME)) ?
+		FAILURE:SUCCESS;
+}
+
 static void connect_peripherals(void)
 {
 	/* This function needs the information provided by
@@ -380,6 +391,15 @@ static void connect_peripherals(void)
 		no_of_devices = sizeof(platform_devices_without_cpu_thermal) /
 				sizeof(struct eclite_device *);
 	}
+
+	ret = is_eclite_devices_available();
+	if (ret == FAILURE) {
+		eclite_enable = false;
+		LOG_ERR("One or more eclite devices are not available");
+		LOG_ERR("Disabling eclite");
+		return;
+	}
+
 	init_dev_framework(platform_devices, no_of_devices);
 #ifdef CONFIG_TEST_MODE
 	/* ECLite FW boot should wait till linux boots. This 4sec time is

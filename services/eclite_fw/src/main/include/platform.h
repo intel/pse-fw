@@ -185,5 +185,9 @@ extern uint32_t no_of_devices;
  */
 extern uint8_t thermal_disable_d0ix;
 
+/**
+ * @brief Checks if all eclite devices are available
+ */
+int is_eclite_devices_available(void);
 
 #endif /*_PLATFORM_H_ */

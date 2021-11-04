@@ -417,13 +417,20 @@ int eclite_heci_event_process(uint32_t event)
 
 static int init_host_communication(const struct device *arg)
 {
+	int ret;
+
 	ARG_UNUSED(arg);
 
 	if (sedi_get_config(SEDI_CONFIG_ECLITE_EN, NULL) != SEDI_CONFIG_SET) {
 		return 0;
 	}
+
+	ret = is_eclite_devices_available();
+	if (ret == FAILURE) {
+		return 0;
+	}
+
 #ifdef CONFIG_HECI
-	int ret;
 	heci_client_t heci_client = {
 		.protocol_id = HECI_CLIENT_ECLITE_GUID,
 		.max_msg_size = ECLITE_HECI_MAX_RX_SIZE,
