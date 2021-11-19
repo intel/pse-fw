@@ -317,7 +317,7 @@ void pm_task(void *arg1, void *arg2, void *arg3)
 	int ret = 0;
 
 	/* Get the device handler for UART device. */
-	uart_dev = device_get_binding(CONFIG_UART_SHELL_ON_DEV_NAME);
+	uart_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
 	if (!uart_dev) {
 		printk("Failed to get shell device binding\n");
 		return;
