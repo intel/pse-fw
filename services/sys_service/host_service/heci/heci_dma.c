@@ -12,7 +12,6 @@
 #include "host_ipc_service.h"
 #include <user_app_framework/user_app_framework.h>
 
-
 #include <logging/log.h>
 LOG_MODULE_DECLARE(heci, CONFIG_HECI_LOG_LEVEL);
 
@@ -201,7 +200,7 @@ static int dma_copy(uint64_t src_addr, uint64_t dst_addr,
 	sedi_dma_start_transfer(dma, chn, src_addr, dst_addr, len);
 
 	/* release heci lock, let other client run*/
-	ret = k_sem_take(&dma_info->dma_sem,  K_MSEC(DMA_TIMEOUT_MS));
+	ret = k_sem_take(&dma_info->dma_sem, K_MSEC(DMA_TIMEOUT_MS));
 	if (ret) {
 		sedi_dma_abort_transfer(dma, chn);
 		goto out;
@@ -260,16 +259,6 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 	req.command = HECI_BUS_MSG_DMA_XFER_REQ;
 	req.host_addr = conn->host_addr;
 	req.fw_addr = conn->fw_addr;
-
-#ifdef CONFIG_SYS_MNG
-	ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
-	if (ret) {
-		LOG_ERR("%s failed to request access to host %d",
-			__func__, (uint32_t)ret);
-		return false;
-	}
-#endif
-
 	while (msg != NULL) {
 		/* allocate enough buffer for DMA*/
 		block_size = msg->len;
@@ -279,13 +268,27 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 			return ret;
 		}
 
+#ifdef CONFIG_SYS_MNG
+		ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
+		if (ret) {
+			LOG_ERR("%s failed to request access to host %d",
+				__FUNCTION__, ret);
+			heci_dma_free_tx_buffer(dram_addr, block_size);
+			return false;
+		}
+#endif
+
 		/* copy msg content to host dram via DMA */
 		ret = dma_copy((uint32_t) msg->buf,
 			       dram_addr, msg->len, false);
+#ifdef CONFIG_SYS_MNG
+		mng_host_access_dereq();
+#endif
 		if (ret) {
 			LOG_ERR("dma copy err");
 			goto err_sending;
 		}
+
 		LOG_DBG("%p->0x%x%08x+%u", msg->buf,
 			GET_MSB(dram_addr),
 			GET_LSB(dram_addr),
@@ -301,15 +304,10 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 		}
 		msg = msg->next;
 	}
-#ifdef CONFIG_SYS_MNG
-	mng_host_access_dereq();
-#endif
+
 	return true;
 
 err_sending:
 	heci_dma_free_tx_buffer(dram_addr, block_size);
-#ifdef CONFIG_SYS_MNG
-	mng_host_access_dereq();
-#endif
 	return false;
 }
