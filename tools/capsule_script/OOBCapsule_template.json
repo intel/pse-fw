@@ -1,0 +1,46 @@
+{
+  "FmpGuid": "A7EE90B1-FB4A-4478-B868-367EE9EC97E2",
+  "Version": 1,
+  "FV" :
+  {
+    "FvGuid": "775F2E50-7441-4DAD-B71E-5DBD5AAC57A6",
+    "FfsFiles":
+    [
+      {
+        "FileGuid": "4DB2A373-C936-4544-AA6D-8A194AA9CA7F",
+        "Compression": false,
+        "Data" :
+        [
+            [ "a_oob_prov_state", "DECIMAL", 4, 1 ],
+            [ "a_oob_device_id_size", "DECIMAL", 4, unique_device_id_size ],
+            [ "a_oob_device_id", "STRING", 512, "unique_device_id" ],
+            [ "a_oob_token_id_size", "DECIMAL", 4, tenant_token_id_size ],
+            [ "a_oob_token_id", "STRING", 512, "tenant_token_id" ],
+            [ "a_oob_cloud_type_size", "DECIMAL", 4, cloud_type_size ],
+            [ "a_oob_cloud_type", "STRING", 16, "cloud_type" ],
+            [ "a_oob_cloud_host_url_size", "DECIMAL", 4, cloud_url_size ],
+            [ "a_oob_cloud_host_url", "STRING", 512, "cloud_url" ],
+            [ "a_oob_cloud_host_port", "DECIMAL", 4, cloud_port ],
+            [ "a_proxy_host_url_size", "DECIMAL", 4, proxy_url_size ],
+            [ "a_proxy_host_url", "STRING", 512, "proxy_url"],
+            [ "a_proxy_host_port", "DECIMAL", 4, proxy_port ],
+            [ "a_owner_pub_key_size", "DECIMAL", 4, 8 ],
+            [ "a_owner_pub_key", "STRING", 512, "abcd1234" ],
+            [ "a_mqtt_client_id_size", "DECIMAL", 4, unique_client_id_size ],
+            [ "a_mqtt_client_id", "STRING", 512, "unique_client_id" ]
+        ]
+      },
+      {
+        "FileGuid": "2F4DE35A-0D52-44FC-ABF3-75B8AA51F434",
+        "Compression": false,
+        "Data" :
+        [
+            [ "a_oob_root_ca", "FILE", pem_file_size, "pem_file_path"]
+        ]
+      }
+    ]
+  }
+}
+
+
+

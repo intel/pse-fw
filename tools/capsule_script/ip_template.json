@@ -1,0 +1,92 @@
+{
+  "FmpGuid": "697F0EA1-B630-4B93-9B08-EAFFC5D5FC45",
+  "Version": 1,
+  "FV" :
+  {
+    "FvGuid": "00F7E131-1185-4790-B393-92F931E4523C",
+    "FfsFiles":
+    [
+      {
+        "FileGuid": "40BD5BCD-094F-43B3-8D8D-1D72F850C3CB",
+        "Compression": false,
+        "Data" :
+        [
+          ["Version", "DECIMAL", 4, 1],
+          ["NumPorts", "DECIMAL", 4, 2],
+
+          ["BDF",            "HEXADECIMAL", 4, "000E9000"],
+          ["PortValid",      "DECIMAL",     4, 1],
+          ["StaticIp",       "HEXADECIMAL", 4, PSE_Gbe_0_Network],
+          ["Ipv4Address",    "HEXADECIMAL", 4, PSE_Gbe_0_Ipv4],
+          ["Ipv6Address1",   "HEXADECIMAL", 4, PSE_Gbe_0_Ipv6Add1],
+          ["Ipv6Address2",   "HEXADECIMAL", 4, PSE_Gbe_0_Ipv6Add2],
+          ["Ipv6Address3",   "HEXADECIMAL", 4, PSE_Gbe_0_Ipv6Add3],
+          ["Ipv6Address4",   "HEXADECIMAL", 4, PSE_Gbe_0_Ipv6Add4],
+          ["SubnetMask",     "HEXADECIMAL", 4, PSE_Gbe_0_SubnetMask],
+          ["Gateway",        "HEXADECIMAL", 4, PSE_Gbe_0_Gateway],
+          ["DnsSrvNum",      "DECIMAL",     4, PSE_Gbe_0_DnsSrvNum],
+          ["DnsSrv1Address", "HEXADECIMAL", 4, PSE_Gbe_0_DnsSrv1Add],
+          ["DnsSrv2Address", "HEXADECIMAL", 4, PSE_Gbe_0_DnsSrv2Add],
+          ["DnsSrv3Address", "HEXADECIMAL", 4, PSE_Gbe_0_DnsSrv3Add],
+          ["DnsSrv4Address", "HEXADECIMAL", 4, PSE_Gbe_0_DnsSrv4Add],
+          ["ProxyAddress",   "HEXADECIMAL", 4, 0],
+          ["ProxyPort",      "DECIMAL",     4, 0],
+
+          ["BDF",            "HEXADECIMAL", 4, "000EA000"],
+          ["PortValid",      "DECIMAL",     4, 1],
+          ["StaticIp",       "HEXADECIMAL", 4, PSE_Gbe_1_Network],
+          ["Ipv4Address",    "HEXADECIMAL", 4, PSE_Gbe_1_Ipv4],
+          ["Ipv6Address1",   "HEXADECIMAL", 4, PSE_Gbe_1_Ipv6Add1],
+          ["Ipv6Address2",   "HEXADECIMAL", 4, PSE_Gbe_1_Ipv6Add2],
+          ["Ipv6Address3",   "HEXADECIMAL", 4, PSE_Gbe_1_Ipv6Add3],
+          ["Ipv6Address4",   "HEXADECIMAL", 4, PSE_Gbe_1_Ipv6Add4],
+          ["SubnetMask",     "HEXADECIMAL", 4, PSE_Gbe_1_SubnetMask],
+          ["Gateway",        "HEXADECIMAL", 4, PSE_Gbe_1_Gateway],
+          ["DnsSrvNum",      "DECIMAL",     4, PSE_Gbe_1_DnsSrvNum],
+          ["DnsSrv1Address", "HEXADECIMAL", 4, PSE_Gbe_1_DnsSrv1Add],
+          ["DnsSrv2Address", "HEXADECIMAL", 4, PSE_Gbe_1_DnsSrv2Add],
+          ["DnsSrv3Address", "HEXADECIMAL", 4, PSE_Gbe_1_DnsSrv3Add],
+          ["DnsSrv4Address", "HEXADECIMAL", 4, PSE_Gbe_1_DnsSrv4Add],
+          ["ProxyAddress",   "HEXADECIMAL", 4, 0],
+          ["ProxyPort",      "DECIMAL",     4, 0],
+
+          ["BDF",            "HEXADECIMAL", 4, "00000000"],
+          ["PortValid",      "DECIMAL",     4, 0],
+          ["StaticIp",       "HEXADECIMAL", 4, 0],
+          ["Ipv4Address",    "HEXADECIMAL", 4, 0],
+          ["Ipv6Address1",   "HEXADECIMAL", 4, 0],
+          ["Ipv6Address2",   "HEXADECIMAL", 4, 0],
+          ["Ipv6Address3",   "HEXADECIMAL", 4, 0],
+          ["Ipv6Address4",   "HEXADECIMAL", 4, 0],
+          ["SubnetMask",     "HEXADECIMAL", 4, 0],
+          ["Gateway",        "HEXADECIMAL", 4, 0],
+          ["DnsSrvNum",      "DECIMAL",     4, 0],
+          ["DnsSrv1Address", "HEXADECIMAL", 4, 0],
+          ["DnsSrv2Address", "HEXADECIMAL", 4, 0],
+          ["DnsSrv3Address", "HEXADECIMAL", 4, 0],
+          ["DnsSrv4Address", "HEXADECIMAL", 4, 0],
+          ["ProxyAddress",   "HEXADECIMAL", 4, 0],
+          ["ProxyPort",      "DECIMAL",     4, 0],
+
+          ["BDF",            "HEXADECIMAL", 4, "00000000"],
+          ["PortValid",      "DECIMAL",     4, 0],
+          ["StaticIp",       "HEXADECIMAL", 4, 0],
+          ["Ipv4Address",    "HEXADECIMAL", 4, 0],
+          ["Ipv6Address1",   "HEXADECIMAL", 4, 0],
+          ["Ipv6Address2",   "HEXADECIMAL", 4, 0],
+          ["Ipv6Address3",   "HEXADECIMAL", 4, 0],
+          ["Ipv6Address4",   "HEXADECIMAL", 4, 0],
+          ["SubnetMask",     "HEXADECIMAL", 4, 0],
+          ["Gateway",        "HEXADECIMAL", 4, 0],
+          ["DnsSrvNum",      "DECIMAL",     4, 0],
+          ["DnsSrv1Address", "HEXADECIMAL", 4, 0],
+          ["DnsSrv2Address", "HEXADECIMAL", 4, 0],
+          ["DnsSrv3Address", "HEXADECIMAL", 4, 0],
+          ["DnsSrv4Address", "HEXADECIMAL", 4, 0],
+          ["ProxyAddress",   "HEXADECIMAL", 4, 0],
+          ["ProxyPort",      "DECIMAL",     4, 0]
+        ]
+      }
+    ]
+  }
+}

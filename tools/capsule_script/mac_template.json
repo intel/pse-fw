@@ -1,0 +1,36 @@
+{
+"FmpGuid": "6FEE88FF-49ED-48F1-B77B-EAD15771ABE7",
+  "Version": 1,
+  "FV" :
+  {
+    "FvGuid": "1A803C55-F034-4E60-AD9E-9D3F32CE273C",
+    "FfsFiles":
+    [
+      {
+        "FileGuid": "12E29FB4-AA56-4172-B34E-DD5F4B440AA9",
+        "Compression": false,
+        "Data" :
+        [
+          ["Version", "DECIMAL", 4, 1],
+          ["NumPorts", "DECIMAL", 4, 4],
+
+          ["BDF",            "HEXADECIMAL", 4, "000F4000"], 
+          ["MacAddressLow",  "HEXADECIMAL", 4, "PCH_Gbe_Low_Mac"],
+          ["MacAddressHigh", "HEXADECIMAL", 4, "PCH_Gbe_High_Mac"],
+
+          ["BDF",            "HEXADECIMAL", 4, "000E9000"],
+          ["MacAddressLow",  "HEXADECIMAL", 4, "PSE_Gbe_0_Low_Mac"],
+          ["MacAddressHigh", "HEXADECIMAL", 4, "PSE_Gbe_0_High_Mac"],
+
+          ["BDF",            "HEXADECIMAL", 4, "000EA000"],
+          ["MacAddressLow",  "HEXADECIMAL", 4, "PSE_Gbe_1_Low_Mac"],
+          ["MacAddressHigh", "HEXADECIMAL", 4, "PSE_Gbe_1_High_Mac"],
+
+          ["BDF",            "HEXADECIMAL", 4, "00000000"],
+          ["MacAddressLow",  "HEXADECIMAL", 4, "AABBCCDD"],
+          ["MacAddressHigh", "HEXADECIMAL", 4, "00001122"]
+        ]
+      }
+    ]
+  }
+}
