@@ -20,6 +20,7 @@ LOG_MODULE_REGISTER(hostcomm, CONFIG_ECLITE_LOG_LEVEL);
 
 #ifdef CONFIG_HECI
 APP_GLOBAL_VAR(1) static heci_rx_msg_t eclite_rx_msg;
+APP_GLOBAL_VAR(1) bool data_msg_heci_send_stat;
 APP_GLOBAL_VAR(1) uint32_t heci_connection_id =
 	ECLITE_HECI_INVALID_CONN_ID;
 APP_GLOBAL_VAR_BSS(1) static struct message_buffer eclite_rx_buffer;
@@ -199,6 +200,10 @@ static int eclite_process_data_message(struct message_buffer *buffer)
 		mrd_message.len = sizeof(struct message_header_type)
 				  + length;
 		ret = heci_send(heci_connection_id, &mrd_message);
+		if (ret == false) {
+			LOG_ERR("process data heci_send failed\n");
+			data_msg_heci_send_stat = FAILURE;
+		}
 		ECLITE_LOG_DEBUG("Heci send ret val %d", ret);
 	} else if (message_header->read_write == ECLITE_HEADER_OPR_WRITE) {
 		uint8_t *receive_buffer = buffer->data;
@@ -283,10 +288,10 @@ int eclite_send_event(uint32_t event)
 	ECLITE_LOG_DEBUG("Sending Event %u to OS", event);
 
 	ret = heci_send(heci_connection_id, &mrd_message);
-	if (ret) {
+	if (ret == false) {
 		/* ret = heci_send_flow_control(heci_connection_id); */
-		LOG_WRN("HECI send failure");
-		return ret;
+		LOG_WRN("send event: heci_send failed");
+		return ERROR;
 	}
 #endif
 	return 0;
@@ -355,6 +360,8 @@ int eclite_heci_event_process(uint32_t event)
 #ifdef CONFIG_HECI
 	int ret = ERROR;
 
+	data_msg_heci_send_stat = SUCCESS;
+
 	switch (event) {
 	case HECI_EVENT_NEW_MSG:
 		if (eclite_rx_msg.msg_lock != MSG_LOCKED) {
@@ -375,6 +382,10 @@ int eclite_heci_event_process(uint32_t event)
 			ret = eclite_process_msg((struct message_buffer *)
 						 eclite_rx_msg.buffer);
 			ECLITE_LOG_DEBUG("Eclite process msg sts ret:%d", ret);
+			if (data_msg_heci_send_stat == FAILURE) {
+				LOG_ERR("process data message failed\n");
+				break;
+			}
 		}
 		/*
 		 * send flow control after finishing one message,
