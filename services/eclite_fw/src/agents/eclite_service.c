@@ -71,21 +71,6 @@ int eclite_service_gpio_config(struct eclite_device *eclite_dev_list[],
 			gpio_pin_flag = gpio_cfg->gpio_config.dir |
 					gpio_cfg->gpio_config.pull_down_en;
 
-			if (gpio_pin_num == CHARGER_GPIO) {
-				uint32_t pin_value;
-
-				pin_value = gpio_pin_get_raw(
-					(struct device *)gpio_dev,
-				        gpio_pin_num);
-				if (pin_value) {
-					gpio_pin_flag &=
-						~(GPIO_ACTIVE_HIGH);
-				}
-				else {
-					gpio_pin_flag |= (GPIO_ACTIVE_HIGH);
-				}
-			}
-
 			if (gpio_pin_num == plt_gpio_list[j].gpio_no) {
 				/* Configure each device gpio pin */
 				ret = eclite_gpio_configure(gpio_dev,
@@ -107,7 +92,27 @@ int eclite_service_gpio_config(struct eclite_device *eclite_dev_list[],
 					return ret;
 				}
 
-				gpio_pin_flag |= gpio_cfg->gpio_config.intr_type;
+				gpio_pin_flag = gpio_cfg->gpio_config.intr_type;
+
+				if (gpio_pin_num == CHARGER_GPIO) {
+					uint32_t pin_value;
+
+					pin_value = gpio_pin_get_raw(
+							(struct device *)gpio_dev,
+							gpio_pin_num);
+					if (pin_value) {
+						gpio_pin_flag &=
+							~(GPIO_INT_TRIG_HIGH);
+						gpio_pin_flag |=
+							(GPIO_INT_TRIG_LOW);
+					}
+					else {
+						gpio_pin_flag &=
+							~(GPIO_INT_TRIG_LOW);
+						gpio_pin_flag |=
+							(GPIO_INT_TRIG_HIGH);
+					}
+				}
 
 				ret = eclite_gpio_pin_enable_callback(gpio_dev,
 						gpio_pin_num, gpio_pin_flag);

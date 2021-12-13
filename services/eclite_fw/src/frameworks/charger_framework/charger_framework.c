@@ -182,11 +182,21 @@ int charging_manager_callback(uint8_t event, uint16_t *status)
 		uint32_t pin_value;
 
 		pin_value = gpio_pin_get_raw(gpio_dev, CHARGER_GPIO);
+
 		if (pin_value) {
-			cfg->gpio_config.intr_type &= ~(GPIO_ACTIVE_HIGH);
+			/* We got HIGH, set for LOW trigger -
+			 * Clear HIGH, set LOW(Both are separate bits in
+			 * 2px zephyr */
+			cfg->gpio_config.intr_type &= ~(GPIO_INT_TRIG_HIGH);
+			cfg->gpio_config.intr_type |= (GPIO_INT_TRIG_LOW);
 		} else {
-			cfg->gpio_config.intr_type |= (GPIO_ACTIVE_HIGH);
+			/* We got LOW, set for HIGH trigger -
+			 * Clear LOW, set HIGH(Both are separate bits in
+			 * 2px zephyr */
+			cfg->gpio_config.intr_type &= ~(GPIO_INT_TRIG_LOW);
+			cfg->gpio_config.intr_type |= (GPIO_INT_TRIG_HIGH);
 		}
+
 		ret = eclite_gpio_configure(gpio_dev, CHARGER_GPIO,
 					    cfg->gpio_config.dir);
 		if (ret) {
