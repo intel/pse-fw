@@ -24,6 +24,7 @@
 #include <string.h>
 #include <user_app_framework/user_app_framework.h>
 #include <zephyr.h>
+#include <stdio.h>
 
 /** Declares kernel thread structures for the two sub tasks */
 __kernel static struct k_thread app_sub_task1_handle;
