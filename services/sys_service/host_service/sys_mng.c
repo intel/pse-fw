@@ -242,6 +242,9 @@ static int sys_boot_handler(const struct device *dev, uint32_t drbl)
 	ipc_send_ack(dev, 0, NULL, 0);
 	send_rx_complete(dev);
 	if (drbl == BIT(IPC_DRBL_BUSY_OFFS)) {
+#if CONFIG_HECI
+		heci_reset();
+#endif
 		send_reset_to_peer(dev, MNG_RESET_NOTIFY, 0);
 	}
 

@@ -980,7 +980,7 @@ static bool heci_client_find(heci_client_t *client)
 		}
 	}
 
-	LOG_ERR("HECI client not found");
+	LOG_INF("HECI client not found");
 	return false;
 }
 
