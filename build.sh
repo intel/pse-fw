@@ -47,7 +47,7 @@ else
 	app=$1
 fi
 clean
-source ../zephyr/zephyr_env.sh
+source ../zephyr/zephyr-env.sh
 west build -b ehl_pse_crb $app -DZEPHYR_EXTRA_MODULES=$SERVICES
 
 if [ ! -d "build" ]; then
