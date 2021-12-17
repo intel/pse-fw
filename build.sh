@@ -3,6 +3,7 @@ ws_dir=$(pwd)
 SERVICES=$(pwd)/services
 pse_image_tools_dir=$ws_dir/tools/pse_image_tool
 bootloader_dir=$ws_dir/../modules/bootloader
+CUSTOMER_FLAG=$2
 
 clean() {
 	if [ -d "build" ]; then
@@ -14,6 +15,8 @@ clean() {
 	if [ -d $pse_image_tools_dir/output ]; then
 		rm -rf $pse_image_tools_dir/output
 	fi
+
+	if [ -d $bootloader_dir ]; then
 	pushd $bootloader_dir > /dev/null
 	cd aon_task;
 	if [ -f aon_task.bin ]; then
@@ -23,8 +26,8 @@ clean() {
 	if [ -f bringup.bin ]; then
 		make clean;
 	fi
-
 	popd > /dev/null
+	fi
 
 }
 
@@ -56,7 +59,7 @@ if [ $(test) -n "$(find build -name zephyr.elf)" ]; then
 	ZEPHYR_MAP=$(find build -name zephyr.map)
 	mkdir $pse_image_tools_dir/fragments
 	cp $ZEPHYR_ELF $ZEPHYR_MAP $pse_image_tools_dir/fragments
-	if [ "$2" == "CUSTOMER" ]; then
+	if [ "$CUSTOMER_FLAG" == "CUSTOMER" ]; then
 		echo "CUSTOMER BUILD"
 		if [ -f "tools/bin/aon_task.bin" ]; then
 			echo "found aon_task bin"
