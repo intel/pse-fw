@@ -25,7 +25,7 @@ config GBE0_WOL_SERVICE
 config GBE1_WOL_SERVICE
 	bool "GBE1 WOL Service"
 	depends on WOL_SERVICE
-	default n
+	default y
 	help
 		GBE1 WOL configure.
 
