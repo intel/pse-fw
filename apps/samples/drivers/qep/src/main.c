@@ -14,7 +14,7 @@
  * encoder used can be found by visiting the link below:
  * https://www.bourns.com/docs/Product-Datasheets/EMS22Q.pdf
  * This encoders Phase A, Phase B and index is connected to the
- * QEP_0 interface.
+ * QEP_2 interface.
  * @{
  */
 
@@ -44,7 +44,7 @@
 /** QEP device name. PSE supports four instances,
  * namely QEP_0, QEP_1, QEP_2 and QEP_3.
  */
-#define QEP_TEST_DEV "QEP_0"
+#define QEP_TEST_DEV "QEP_2"
 
 /** Pulse per rev in quadrature decoder mode */
 #define ENCODER_PULSES_PER_REV (256)
