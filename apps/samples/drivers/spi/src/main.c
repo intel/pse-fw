@@ -43,7 +43,7 @@ static uint8_t read_mem[BUF_LEN] = { 0x03, 0,    0,    0,   0xff,
 				     0xff, 0xff, 0xff, 0xff };
 
 /* SPI Module configuration
- * SPI SPEED     : 4M
+ * SPI SPEED     : 2M
  * MASTER OR SLAVE    : Master
  * MODE: Mode 0
  * MSB OR LSB: MSB
@@ -51,7 +51,7 @@ static uint8_t read_mem[BUF_LEN] = { 0x03, 0,    0,    0,   0xff,
  * DATA LINE NUM: Single line
  */
 struct spi_config spi_cfg_1 = {
-	.frequency = 4000000,
+	.frequency = 2000000,
 	.operation = SPI_OP_MODE_MASTER | SPI_MODE_0 | SPI_TRANSFER_MSB |
 		     SPI_WORD_SET(8) | SPI_LINES_SINGLE,
 	.slave = BIT(0),
