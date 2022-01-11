@@ -41,6 +41,10 @@ manifest:
       revision: master
       remote: pse
       path: modules/interface/cmsis
+    - name: firmware.ec.pse.baremetal
+      revision: bm_zephyr_2px
+      remote: pse
+      path: modules/baremetal
     - name: os.rtos.zephyr.iot.zephyr
       path: zephyr
       revision: pse_base_changes
