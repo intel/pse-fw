@@ -121,9 +121,11 @@ static void sec_hc_print_context_param(
 	}
 
 	/* Enable this when more logs needed */
+#if (CONFIG_OOB_LOGGING==4)
 	for (int i = 0; i < p_ctx_param_len; i++) {
-		printk("%02x ", (unsigned int)(*(p_ctx_param_data + i)));
+		LOG_DBG("%02x ", (unsigned int)(*(p_ctx_param_data + i)));
 	}
+#endif
 
 	LOG_INF("\n");
 }
