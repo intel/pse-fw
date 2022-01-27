@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2019 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+
+	l2sram: memory@60000000{
+		device_type = "memory";
+		compatible = "mmio-sram";
+		label = "l2sram";
+		reg = <0x60000000 0x100000>;
+	};
+
+	iccm: memory@0{
+		device_type = "memory";
+		compatible = "mmio-sram";
+		label = "iccm";
+		reg = <0 0x00020000>;
+	};
+
+	dccm: memory@20000000{
+		device_type = "memory";
+		compatible = "mmio-sram";
+		label = "dccm";
+		reg = <0x20020000 0x00040000>;
+	};
+
+	aon_rf: memory@70000000{
+		device_type = "memory";
+		compatible = "mmio-sram";
+		label = "aonrf";
+		reg = <0x70000000 0x10000>;
+	};
+
+};
+
+/ {
+ model = "INTEL PSE";
+ compatible = "intel,pse";
+ chosen {
+  zephyr,sram = &l2sram;
+  zephyr,l2sram = &l2sram;
+  zephyr,iccm = &iccm;
+  zephyr,dccm = &dccm;
+  zephyr,aonrf = &aon_rf;
+  zephyr,console = &uart2;
+  zephyr,shell-uart = &uart2;
+ };
+};

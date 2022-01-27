@@ -1,0 +1,15 @@
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+sample:
+  description: PSE CODE RELOCATION CCM EXAMPLE.
+  name: code relocation ccm
+common:
+    tags: samples
+    harness: console
+    harness_config:
+      type: one_line
+tests:
+    tags: samples
+    platform_whitelist: pse_sram

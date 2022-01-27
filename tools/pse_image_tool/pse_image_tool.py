@@ -63,7 +63,7 @@ class Seg_Info:
         self.seg_name = seg_name
         self.seg_start = seg_start
 
-iccm_re = re.compile('^(ICCM|FLASH) \s+'  # ICCM
+iccm_re = re.compile('^(ICCM) \s+'  # ICCM
                      ' (0x[0-9a-f]+)'  # Origin
                      ' (0x[0-9a-f]+)'  # Length
                      ' ([rwx]+)\s*')   # Attributes
