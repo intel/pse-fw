@@ -20,11 +20,11 @@ manifest:
 
   remotes:
     - name: iotg
-      url-base: https://github.com/ganapathichinnu/
+      url-base: https://github.com/intel-innersource/
     - name: upstream
       url-base: https://github.com/zephyrproject-rtos
     - name: pse
-      url-base: https://github.com/ganapathichinnu/
+      url-base: https://github.com/intel-innersource/
 
   #
   # Please add items below based on alphabetical order
