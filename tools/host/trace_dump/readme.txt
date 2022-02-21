@@ -9,7 +9,7 @@ usages:
 	set "CONFIG_THREAD_NAME=y" to show thread name strings in tracing. Not
 	MUST, but highly suggest to have.
 	The default trace buffer size is 64K. To change it, set
-	"CONFIG_TRACING_CTF_BOTTOM_SHMEM_SIZE=xxx", xxx must be (N * 4096).
+	"CONFIG_PSE_SHMEM_TRACING_BUFFER_SIZE=xxx", xxx must be (N * 4096).
 
 - Rebuild your zephyr app, burn and run on board
 
@@ -33,7 +33,7 @@ usages:
 		download in the web
 
 	create an empty directory
-	copy ./modules/rtos/pse_zephyr/subsys/debug/tracing/ctf/tsdl/metadata
+	copy <root>/zephyr/subsys/tracing/ctf/tsdl/metadata
 		into it
 	scp or copy /data/channel0_0 of Yocto into it
 
