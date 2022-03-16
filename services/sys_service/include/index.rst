@@ -1,7 +1,7 @@
 .. _reference_services_interface:
 
 Reference Capabilities
-###########
+######################
 
 .. toctree::
    :maxdepth: 1
@@ -9,3 +9,4 @@ Reference Capabilities
    ipc.rst
    heci.rst
    pm_index.rst
+   pmc_index.rst

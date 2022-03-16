@@ -76,16 +76,16 @@ struct app_info_t {
  * to execution only  after all the service start execute.  But if mode is
  * USER_MODE_SERVICE then app Main thread will scheduled to execution immidiately
  * after post kernel init and before main function call.
- * @param app ID. Note: User mode App and Service have common App ID and first
+ * @param app_id Note: User mode App and Service have common App ID and first
  * few App IDs (0 to 2) reserved for system services.
- * @param  Mode of App whether is a user mode service or user mode App.
- * @param App main entry function.
- * @param App main Stack size in bytes.
- * @param List of kernel object which App need access with in its local threads
+ * @param app_mode Mode of App whether is a user mode service or user mode App.
+ * @param app_main_task App main entry function.
+ * @param stack_sizes App main Stack size in bytes.
+ * @param kobj_list List of kernel object which App need access with in its local threads
  * or from App main.
- * @param Total number of kernel object which App need access with in its local
+ * @param total_obj Total number of kernel object which App need access with in its local
  * threads or from App main.
- * @Start up init function for configure drivers, setup driver callbacks and
+ * @param config_cb start up init function for configure drivers, setup driver callbacks and
  * other supervisory mode only activities.
  *
  */
