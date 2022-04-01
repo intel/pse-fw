@@ -1,9 +1,15 @@
+#
+# Copyright (c) 2021 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
 #! /bin/bash
 ws_dir=$(pwd)
 SERVICES=$(pwd)/services
 pse_image_tools_dir=$ws_dir/tools/pse_image_tool
 bootloader_dir=$ws_dir/../modules/bootloader
-CUSTOMER_FLAG=$2
+CUSTOMER_FLAG=CUSTOMER
 
 clean() {
 	if [ -d "build" ]; then
