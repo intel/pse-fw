@@ -19,43 +19,29 @@ manifest:
     remote: upstream
 
   remotes:
-    - name: iotg
-      url-base: https://github.com/intel-innersource/
     - name: upstream
       url-base: https://github.com/zephyrproject-rtos
-    - name: pse
-      url-base: https://github.com/intel-innersource/
+    - name: intel_public_github
+      url-base: https://github.com/intel
 
   #
   # Please add items below based on alphabetical order
   projects:
-    - name: os.rtos.zephyr.iot.hal-intel
-      revision: master
-      remote: iotg
-      path: modules/hal/intel
-    - name: firmware.ec.pse.bootloader
-      revision: master
-      remote: pse
-      path: modules/bootloader
-    - name: firmware.ec.pse.cmsis
-      revision: master
-      remote: pse
-      path: modules/interface/cmsis
-    - name: firmware.ec.pse.baremetal
-      revision: bm_zephyr_2px
-      remote: pse
-      path: modules/baremetal
-    - name: os.rtos.zephyr.iot.zephyr
+    - name: sedi-drivers
+      path: modules/hal/sedi
+      revision: pse
+      remote: intel_public_github
+    - name: zephyr
       path: zephyr
-      revision: pse_base_changes
-      remote: iotg
+      revision: intel-pse
+      remote: intel_public_github
       import:
         name-whitelist:
           - mbedtls
           - cmsis
-    - name: os.rtos.zephyr.iot.zephyr-iotg
-      revision: master
+    - name: rtos-if-drivers
+      revision: zephyr-pse
       path: zephyr-iotg
-      remote: iotg
+      remote: intel_public_github
   self:
     path: ehl_pse-fw
