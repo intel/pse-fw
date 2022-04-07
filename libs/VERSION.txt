@@ -1,0 +1,3 @@
+Version Info:
+1. libsedi_base.a    - Release: MR3 Tag:pse_fw_main_z2px_weekly_2210.5_1555
+2. libsedi_base_bm.a - Release: MR3 Tag:pse_fw_main_z2px_weekly_2210.5_1555
