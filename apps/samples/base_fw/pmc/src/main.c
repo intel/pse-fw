@@ -263,6 +263,8 @@ static void app_main(void *p1, void *p2, void *p3)
 
 	k_sleep(K_MSEC(50));
 
+	k_thread_system_pool_assign(k_current_get());
+
 	uart_dev = device_get_binding(UART_DEV);
 
 	if (!uart_dev) {
