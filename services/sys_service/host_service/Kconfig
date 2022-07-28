@@ -21,6 +21,13 @@ config SYS_MNG
 	help
 	  pse-host system management commands handling.
 
+config HOST_TIME_SYNC
+	bool "Sync POSIX REALTIME with host UTC time"
+	default y
+	select POSIX_CLOCK
+	help
+	  Sync POSIX REALTIME with host UTC time passed by host driver
+
 config HECI
 	bool "HECI Protocol support"
 	default y

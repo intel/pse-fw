@@ -16,8 +16,11 @@ LOG_MODULE_REGISTER(sys_mng, CONFIG_HECI_LOG_LEVEL);
 #include <user_app_framework/user_app_framework.h>
 #include <user_app_framework/user_app_config.h>
 #include "driver/sedi_driver_rtc.h"
-#include "driver/sedi_driver_rtc.h"
 #include "driver/sedi_driver_pm.h"
+#if CONFIG_HOST_TIME_SYNC
+#include "driver/sedi_driver_tsync.h"
+#include <posix/time.h>
+#endif
 
 #define MNG_RX_CMPL_ENABLE       0
 #define MNG_RX_CMPL_DISABLE      1
@@ -32,6 +35,7 @@ LOG_MODULE_REGISTER(sys_mng, CONFIG_HECI_LOG_LEVEL);
 #define MNG_D0_NOTIFY_ACK        10
 
 #define MNG_ILLEGAL_CMD          0xFF
+#define MAX_MNG_MSG_LEN          128
 
 #define HOST_COMM_REG 0x40400038
 #define HOST_RDY_BIT 7
@@ -54,7 +58,7 @@ K_MUTEX_DEFINE(rtd3_map_lock);
 APP_SHARED_VAR atomic_t is_waiting_d3 = ATOMIC_INIT(0);
 APP_SHARED_VAR uint32_t rtd3_req_map;
 
-struct ipc_mng_playload_tpye {
+struct reset_payload_tpye {
 	uint16_t reset_id;
 	uint16_t capabilities;
 };
@@ -156,12 +160,95 @@ static int mng_host_req_rtd3_notified(int32_t timeout)
 	}
 }
 
+#if CONFIG_HOST_TIME_SYNC
+
+/* Host and PMC have same frequency */
+#define TSYNC_HOST_LOCAL_MULTI TSYNC_PMC_LOCAL_MULTI
+
+/* indication for the field sequence of host utc and system time in message */
+#define TFMT_SYSTEM_TIME          1
+#define TFMT_ART_TIME             2
+
+struct host_clock_data {
+	uint64_t primary_host_time;
+	struct {
+		uint8_t primary_source;
+		uint8_t secondary_source;
+		uint16_t reserved;
+	} time_format;
+	uint64_t secondary_host_time;
+} __packed;
+
+static void handle_host_time_sync(uint8_t *data, uint8_t data_len)
+{
+	struct host_clock_data *const sync_data =
+			(struct host_clock_data *const)data;
+	uint64_t tsync_cnt;
+	uint64_t host_utc_us;
+	uint64_t host_art_cnt;
+	uint64_t trans_us;
+	struct timespec tp;
+#ifdef CONFIG_HECI_LOG_LEVEL_DBG
+	struct timespec tp_fw;
+	uint64_t fw_utc_us;
+	static uint64_t last_sync_us;
+#endif
+
+	if ((data_len != sizeof(struct host_clock_data)) ||
+		(sync_data->time_format.primary_source != TFMT_ART_TIME)) {
+		LOG_DBG("Unknown time sync format, len=%u, FMT=%u", data_len,
+			(data_len == sizeof(struct host_clock_data)) ?
+			sync_data->time_format.primary_source : (uint32_t)-1);
+		return;
+	}
+
+	host_art_cnt = sync_data->primary_host_time / TSYNC_HOST_LOCAL_MULTI;
+	host_utc_us = sync_data->secondary_host_time;
+
+	sedi_tsync_sync();
+	sedi_tsync_get_time(&tsync_cnt);
+
+	if (tsync_cnt < host_art_cnt) {
+		LOG_ERR("Wrong time sync data, host ART time is "
+				"bigger than FW TSYNC time");
+		return;
+	}
+
+	/* time used to pass down here */
+	trans_us = (tsync_cnt - host_art_cnt) * USEC_PER_SEC /
+			TSYNC_DEFAULT_FREQ;
+	host_utc_us += trans_us;
+
+#ifdef CONFIG_HECI_LOG_LEVEL_DBG
+	clock_gettime(CLOCK_REALTIME, &tp_fw);
+#endif
+
+	tp.tv_sec = host_utc_us / USEC_PER_SEC;
+	tp.tv_nsec = (host_utc_us % USEC_PER_SEC) * NSEC_PER_USEC;
+	clock_settime(CLOCK_REALTIME, &tp);
+
+#ifdef CONFIG_HECI_LOG_LEVEL_DBG
+	fw_utc_us = ((uint64_t)tp_fw.tv_sec * USEC_PER_SEC) +
+			((uint64_t)tp_fw.tv_nsec / NSEC_PER_USEC);
+
+	LOG_DBG("Sync with Host: %+d after %u us",
+			(int32_t)(host_utc_us - fw_utc_us),
+			(uint32_t)(host_utc_us - last_sync_us));
+	last_sync_us = host_utc_us;
+	LOG_DBG(" Host UTC Time: (0x%x, 0x%x)",
+			(uint32_t)(host_utc_us >> 32),
+			(uint32_t)host_utc_us);
+#endif
+}
+
+#endif
+
 static int send_reset_to_peer(const struct device *dev, uint32_t command,
 			      uint16_t reset_id)
 {
 	int ret;
 	uint64_t current_time;
-	struct ipc_mng_playload_tpye ipc_mng_msg = {
+	struct reset_payload_tpye ipc_mng_msg = {
 		.reset_id = reset_id,
 		.capabilities = MNG_CAP_SUPPORTED
 	};
@@ -215,19 +302,22 @@ int send_rx_complete(const struct device *dev)
 	return ret;
 }
 
+static uint8_t mng_in_msg[MAX_MNG_MSG_LEN];
 static int sys_mng_handler(const struct device *dev, uint32_t drbl)
 {
 	int cmd = IPC_HEADER_GET_MNG_CMD(drbl);
 	uint32_t drbl_ack = drbl & (~BIT(IPC_DRBL_BUSY_OFFS));
 
-	struct ipc_mng_playload_tpye mng_msg;
+	struct reset_payload_tpye *rst_msg;
 
-	LOG_DBG("ipc received a management msg, drbl = %08x\n", drbl);
+	LOG_DBG("received a management msg, drbl = %08x", drbl);
+	__ASSERT(IPC_HEADER_GET_LENGTH(drbl) <= MAX_MNG_MSG_LEN, "bad mng msg");
 
-	ipc_read_msg(dev, NULL, (uint8_t *)&mng_msg, sizeof(mng_msg));
+	ipc_read_msg(dev, NULL, (uint8_t *)&mng_in_msg, sizeof(mng_in_msg));
 	ipc_send_ack(dev, drbl_ack, NULL, 0);
 	send_rx_complete(dev);
 
+	LOG_HEXDUMP_DBG(mng_in_msg, IPC_HEADER_GET_LENGTH(drbl), "mng incoming");
 	switch (cmd) {
 	case MNG_RX_CMPL_ENABLE:
 		rx_complete_enabled = true;
@@ -252,14 +342,20 @@ static int sys_mng_handler(const struct device *dev, uint32_t drbl)
 #if CONFIG_HECI
 		heci_reset();
 #endif
-		send_reset_to_peer(dev, MNG_RESET_NOTIFY_ACK, mng_msg.reset_id);
+		rst_msg = (struct reset_payload_tpye *)mng_in_msg;
+		send_reset_to_peer(dev, MNG_RESET_NOTIFY_ACK, rst_msg->reset_id);
 	case MNG_RESET_NOTIFY_ACK:
 		sedi_fwst_set(ILUP_HOST, 1);
 		sedi_fwst_set(HECI_READY, 1);
 		LOG_DBG("ipc link is up\n");
 		break;
 	case MNG_TIME_UPDATE:
+#if CONFIG_HOST_TIME_SYNC
+		handle_host_time_sync(mng_in_msg,
+				      IPC_HEADER_GET_LENGTH(drbl));
+#else
 		LOG_DBG("no time update support\n");
+#endif
 		break;
 	case MNG_RESET_REQUEST:
 		LOG_DBG("host requests pse to reset, not support, do nothing");
