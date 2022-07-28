@@ -54,17 +54,6 @@ int send_rx_complete(const struct device *dev);
 #define RTD3_NOTIFIED_STUCK     ((int32_t)-1)
 #define RTD3_SWITCH_TO_SX	((int32_t)-2)
 
-/*!
- * \fn int mng_host_access_req(s32_t timeout)
- * \brief request access to host
- * \param[in] timeout: timeout time (in milliseconds)
- * \return 0 or error codes
- *
- * @note mng_host_access_req and mng_host_access_dereq should be called in pair
- */
-extern int (*mng_host_access_req)(int32_t timeout);
-
-void mng_host_access_dereq(void);
 void mng_sx_entry(void);
 
 #endif

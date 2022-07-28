@@ -51,16 +51,14 @@ bool heci_send_proto_msg(uint8_t host_addr, uint8_t fw_addr,
 	__ASSERT(data != NULL, "invalid arg: *data\n");
 	__ASSERT(len <= HECI_MAX_PAYLOAD_SIZE, "invalid payload size\n");
 
-	int ret;
+	int ret, host_req_handler;
 	uint32_t outbound_drbl;
 	uint8_t buf[HECI_IPC_PACKET_SIZE] = { 0 };
 	const struct device *dev = device_get_binding("IPC_HOST");
 
 #ifdef CONFIG_SYS_MNG
-	ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
-	if (ret) {
-		LOG_ERR("%s failed to request access to host %d", __func__,
-			(uint32_t)ret);
+	host_req_handler = host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
+	if (host_req_handler < 0) {
 		return false;
 	}
 #endif
@@ -78,7 +76,7 @@ bool heci_send_proto_msg(uint8_t host_addr, uint8_t fw_addr,
 	ret = ipc_write_msg(dev, outbound_drbl, buf, len, NULL, NULL, 0);
 
 #ifdef CONFIG_SYS_MNG
-	mng_host_access_dereq();
+	host_access_dereq(host_req_handler);
 #endif
 
 	DUMP_HECI_MSG(outbound_drbl, msg, false, false);
@@ -102,7 +100,7 @@ static bool send_client_msg_ipc(heci_conn_t *conn, mrd_t *msg)
 	uint8_t buf[HECI_IPC_PACKET_SIZE] = { 0 };
 	heci_bus_msg_t *bus_msg = (heci_bus_msg_t *)buf;
 
-	int ret;
+	int ret, host_req_handler;
 	unsigned int fragment_size;
 	unsigned int done_bytes = 0;
 	uint32_t out_drbl;
@@ -110,10 +108,8 @@ static bool send_client_msg_ipc(heci_conn_t *conn, mrd_t *msg)
 	uint32_t copy_size;
 
 #ifdef CONFIG_SYS_MNG
-	ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
-	if (ret) {
-		LOG_ERR("%s failed to request access to host %d", __func__,
-			(uint32_t)ret);
+	host_req_handler = host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
+	if (host_req_handler < 0) {
 		return false;
 	}
 #endif
@@ -159,7 +155,7 @@ static bool send_client_msg_ipc(heci_conn_t *conn, mrd_t *msg)
 				    fragment_size, NULL, NULL, 0);
 		if (ret) {
 #ifdef CONFIG_SYS_MNG
-			mng_host_access_dereq();
+			host_access_dereq(host_req_handler);
 #endif
 
 			LOG_ERR("write HECI client msg err");
@@ -168,7 +164,7 @@ static bool send_client_msg_ipc(heci_conn_t *conn, mrd_t *msg)
 	}
 
 #ifdef CONFIG_SYS_MNG
-	mng_host_access_dereq();
+	host_access_dereq(host_req_handler);
 #endif
 
 	return true;

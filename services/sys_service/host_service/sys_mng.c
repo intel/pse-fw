@@ -47,10 +47,12 @@ bool rx_complete_enabled = true;
 bool rx_complete_changed;
 uint64_t last_reset_notify_time;
 
-K_SEM_DEFINE(sem_d3, 0, 1)
-K_SEM_DEFINE(sem_rtd3, 1, 1)
+K_SEM_DEFINE(sem_d3, 0, 1);
+K_SEM_DEFINE(sem_rtd3, 1, 1);
+K_MUTEX_DEFINE(rtd3_map_lock);
 
 APP_SHARED_VAR atomic_t is_waiting_d3 = ATOMIC_INIT(0);
+APP_SHARED_VAR uint32_t rtd3_req_map;
 
 struct ipc_mng_playload_tpye {
 	uint16_t reset_id;
@@ -66,6 +68,52 @@ static int mng_host_req_d0(int32_t timeout);
  */
 APP_SHARED_VAR int (*mng_host_access_req)(int32_t /* timeout */) =
 	mng_host_req_d0;
+
+void mng_host_access_dereq(void);
+
+int host_access_req(int32_t timeout)
+{
+	int ret;
+
+	ret = k_mutex_lock(&rtd3_map_lock, K_MSEC(timeout));
+	if (ret) {
+		LOG_ERR("error when requesting rtd3, occupied");
+		return ret;
+	}
+	if (rtd3_req_map == UINT32_MAX) {
+		LOG_ERR("error when requesting rtd3");
+		k_mutex_unlock(&rtd3_map_lock);
+		return -1;
+	}
+	if (rtd3_req_map == 0) {
+		ret = mng_host_access_req(timeout);
+		if (ret) {
+			LOG_DBG("host access requested failed");
+			k_mutex_unlock(&rtd3_map_lock);
+			return ret;
+		}
+	}
+	ret = find_lsb_set(rtd3_req_map);
+	rtd3_req_map |= BIT(ret);
+	k_mutex_unlock(&rtd3_map_lock);
+	return ret;
+}
+
+int host_access_dereq(int handler)
+{
+	k_mutex_lock(&rtd3_map_lock, K_FOREVER);
+	if ((handler >= 0) && (handler <= 31) && (rtd3_req_map & BIT(handler))) {
+		rtd3_req_map &= (~BIT(handler));
+		if (rtd3_req_map == 0) {
+			mng_host_access_dereq();
+		}
+		k_mutex_unlock(&rtd3_map_lock);
+		return 0;
+	}
+	LOG_ERR("invaild host dereq argument");
+	k_mutex_unlock(&rtd3_map_lock);
+	return -1;
+}
 
 static int mng_host_req_d0(int32_t timeout)
 {

@@ -28,6 +28,7 @@ static ipc_msg_handler_f protocol_cb[MAX_SERVICE_CLIENTS] = { 0 };
 extern __kernel struct k_mutex dev_lock;
 extern __kernel struct k_sem sem_rtd3;
 extern __kernel struct k_sem sem_d3;
+extern __kernel struct k_mutex rtd3_map_lock;
 
 int host_protocol_register(uint8_t protocol_id, ipc_msg_handler_f handler)
 {
@@ -124,7 +125,8 @@ void host_config(void)
 			k_thread_access_grant(res_table->app_handle,
 					      &dev_lock,
 					      &sem_rtd3,
-					      &sem_d3);
+					      &sem_d3,
+					      &rtd3_map_lock);
 		}
 	}
 }

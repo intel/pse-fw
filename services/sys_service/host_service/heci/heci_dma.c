@@ -251,7 +251,7 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 	__ASSERT(conn != NULL, "invalid heci connection\n");
 	__ASSERT(msg != NULL, "invalid heci client msg to send\n");
 
-	int ret;
+	int ret, host_req_handler;
 	uint32_t block_size;
 	uint64_t dram_addr;
 	heci_bus_dma_xfer_req_t req = { 0 };
@@ -269,10 +269,8 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 		}
 
 #ifdef CONFIG_SYS_MNG
-		ret = mng_host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
-		if (ret) {
-			LOG_ERR("%s failed to request access to host %d",
-				__FUNCTION__, ret);
+		host_req_handler = host_access_req(HECI_HAL_DEFAULT_TIMEOUT);
+		if (host_req_handler) {
 			heci_dma_free_tx_buffer(dram_addr, block_size);
 			return false;
 		}
@@ -282,7 +280,7 @@ bool send_client_msg_dma(heci_conn_t *conn, mrd_t *msg)
 		ret = dma_copy((uint32_t) msg->buf,
 			       dram_addr, msg->len, false);
 #ifdef CONFIG_SYS_MNG
-		mng_host_access_dereq();
+		host_access_dereq(host_req_handler);
 #endif
 		if (ret) {
 			LOG_ERR("dma copy err");
