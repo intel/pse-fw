@@ -282,7 +282,7 @@ static void app_main(void *p1, void *p2, void *p3)
 		printk("Enter 5 to Trigger PME assert (hostwakeup)\n");
 
 		while (uart_poll_in(uart_dev, &action) < 0) {
-			k_busy_wait(1000);
+			k_sleep(K_MSEC(1));
 		}
 
 		switch (action) {
