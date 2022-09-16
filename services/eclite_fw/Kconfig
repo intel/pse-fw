@@ -12,9 +12,6 @@ source "subsys/logging/Kconfig.template.log_config"
 
 config ECLITE_SERVICE
 	bool "Eclite Service"
-	select SYS_SERVICE
-	select PMC_SERVICE
-	select PM_SERVICE
 	help
 		Enable EC Lite service.
 
