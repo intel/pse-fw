@@ -12,6 +12,7 @@
 
 #include <string.h>
 #include <arch/arm/aarch32/cortex_m/cmsis.h>
+#include <sedi.h>
 
 /* size of stack area used by each thread */
 #define STACKSIZE               1024
@@ -163,7 +164,7 @@ static int test_task(uint32_t chan_id, uint32_t blen, uint32_t block_count)
 	memset(rx_data2, 0, sizeof(rx_data2));
 	memset(rx_data3, 0, sizeof(rx_data3));
 	memset(rx_data4, 0, sizeof(rx_data4));
-	SCB_CleanDCache_by_Addr((uint32_t *)rx_data, RX_BUFF_SIZE * 4 + 32);
+	sedi_core_clean_dcache_by_addr((uint32_t *)rx_data, RX_BUFF_SIZE * 4 + 32);
 
 	/* config to initialize dma */
 	if (dma_config(dma_device, chan_id, &dma_cfg)) {
@@ -189,7 +190,7 @@ static int test_task(uint32_t chan_id, uint32_t blen, uint32_t block_count)
 	}
 
 	/* Invalidate cache of rx buffer */
-	SCB_InvalidateDCache_by_Addr((uint32_t *)rx_data,
+	sedi_core_inv_dcache_by_addr((uint32_t *)rx_data,
 				     RX_BUFF_SIZE * 4 + 32);
 
 	/*
@@ -282,7 +283,7 @@ static int test_ll_task(uint32_t chan_id, uint32_t blen, uint32_t block_count)
 	memset(rx_data2, 0, sizeof(rx_data2));
 	memset(rx_data3, 0, sizeof(rx_data3));
 	memset(rx_data4, 0, sizeof(rx_data4));
-	SCB_CleanDCache_by_Addr((uint32_t *)rx_data, RX_BUFF_SIZE * 4 + 32);
+	sedi_core_clean_dcache_by_addr((uint32_t *)rx_data, RX_BUFF_SIZE * 4 + 32);
 
 	if (dma_config(dma_device, chan_id, &dma_cfg)) {
 		printk("ERROR: configuring\n");
@@ -307,7 +308,7 @@ static int test_ll_task(uint32_t chan_id, uint32_t blen, uint32_t block_count)
 	}
 
 	/* Invalidate cache of rx buffer */
-	SCB_InvalidateDCache_by_Addr((uint32_t *)rx_data,
+	sedi_core_inv_dcache_by_addr((uint32_t *)rx_data,
 				     RX_BUFF_SIZE * 4 + 32);
 	dma_stop(dma_device, chan_id);
 	printk("block count = %d\n", block_count);
