@@ -1,5 +1,5 @@
 MAJOR = 0
-MINOR = 23
+MINOR = 24
 PATCH = 0
 HW_IP = PSE_0_00
 PERSONA = Base
